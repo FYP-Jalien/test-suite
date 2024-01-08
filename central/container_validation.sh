@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ../func/messages.sh
+source ../func/messages.sh
 
 SHARED_VOLUME="/home/jananga/FYP/SHARED_VOLUME"
 JALIEN_SETUP_DIR="/home/jananga/FYP/jalien-setup"
@@ -10,9 +10,7 @@ expected_image="jalien-base-18"
 expected_command="/jalien-setup/bash-setup/entrypoint.sh"
 expected_ports=("8098/tcp" "8097/tcp" "3307/tcp" "8389/tcp")
 expected_volumes=("$SHARED_VOLUME:/jalien-dev:rw" "$JALIEN_SETUP_DIR:/jalien-setup:ro")
-healthcheck_commands=("mysql --verbose --host=127.0.0.1 --port=3307 --password=pass --user=root --execute \"SHOW DATABASES;\"" "ldapsearch -x -b \"o=localhost,dc=localdomain\" -H ldap://localhost:8389")
-expected_start_period="600s"
-expected_environment="SE_HOST=JCentral-dev-SE"
+expected_environment="SE_HOST=JCentral-dev-SE "
 
 
 # Check if the Docker container is running
@@ -38,7 +36,7 @@ if sudo docker ps --format '{{.Names}}' | grep -qw $container_name; then
     # Check ports
     actual_ports=$(sudo docker inspect --format='{{range $p, $conf := .NetworkSettings.Ports}}{{$p}} {{end}}' "$container_name")
     for port in "${expected_ports[@]}"; do
-        if [[ ! " ${actual_ports[@]} " =~ " $port " ]]; then
+        if [[ ! " ${actual_ports[*]} " =~  $port  ]]; then
             print_error "Error: Port $port is not found in the container's ports."
         else
             print_success "Port $port is correct."
@@ -48,7 +46,7 @@ if sudo docker ps --format '{{.Names}}' | grep -qw $container_name; then
     # Check volumes
     actual_volumes=$(sudo docker inspect --format='{{range .Mounts}}{{.Source}}:{{.Destination}}:{{.Mode}} {{end}}' "$container_name")
     for volume in "${expected_volumes[@]}"; do
-        if [[ ! " ${actual_volumes[@]} " =~ " $volume " ]]; then
+        if [[ ! " ${actual_volumes[*]} " =~  $volume  ]]; then
             print_error "Error: Volume $volume is not found in the container's volumes."
         else
             print_success "Volume $volume is correct."
@@ -63,10 +61,18 @@ if sudo docker ps --format '{{.Names}}' | grep -qw $container_name; then
         print_success "Healthcheck is present."
     fi
 
+    # Check the health status of the container
+    health_status=$(sudo docker inspect --format='{{.State.Health.Status}}' "$container_name")
+    if [ ! "$health_status" = "healthy" ]; then
+        print_error "Container $container_name is not healthy."
+    else
+        print_success "Container $container_name is healthy."
+    fi
+
     # Check environment variables
     actual_environment=$(sudo docker inspect --format='{{range $key, $value := .Config.Env}}{{$value}} {{end}}' "$container_name")
     for env in "${expected_environment[@]}"; do
-        if [[ ! " ${actual_environment[@]} " =~ " $env " ]]; then
+        if [[ ! " ${actual_environment[*]} " =~  $env  ]]; then
             print_error "Error: env $env is not set in the container's environment."
         else
             print_success "env $env is set."

@@ -11,5 +11,5 @@ function print_success() {
 
 # Function to echo error message in red color
 function print_error() {
-    echo -e "$error_color$1$reser_color"
+    echo -e "$error_color$1$reset_color"
 }
