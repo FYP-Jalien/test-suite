@@ -8,6 +8,8 @@ sql_port=3307
 password=pass
 user=root
 
+jalien_setup="/jalien-setup"
+sql_templates="$jalien_setup/bash-setup/templates/sql"
 
 
 data_dB="alice_data"
@@ -25,19 +27,6 @@ host = $host
 port = $sql_port
 user = $user
 password = $password"
-
-function startDB(){
-    mysqld_safe --defaults-file=$my_cnf &>/dev/null &
-    
-}
-
-function die(){
-    if [[ $? -ne 0 ]]; then {
-        echo "$1"
-        exit 1
-    }
-    fi
-}
 
 function mysql_command() {
     mysql --defaults-extra-file="$my_cnf" --verbose --execute "$1"
@@ -279,9 +268,44 @@ function check_add_to_sitequeues(){
     
 }
 
+function check_optimizer(){
+    success=()
+    result=$(mysql_dB_command_return "processes" "SELECT maxJobs, maxqueued FROM HOSTS ;" | tail -n +6)
+    read -r -a values <<< "$result"
+    if [ "${values[0]}" != "3000" ]  ; then
+        print_error "processes HOSTS table entry maxJobs is ${values[0]}. It should be 3000."
+        success+=( 0 )
+    fi
+    if [ "${values[1]}" != "300" ]  ; then
+        print_error "processes HOSTS table entry maxqueued is ${values[1]}. It should be 300."
+        success+=( 0 )
+    fi
+    result=$(mysql_dB_command_return "processes" "SELECT blocked FROM SITEQUEUES ;" | tail -n +6)
+    read -r -a values <<< "$result"
+    for value in "${values[@]}"; do
+        if [ "$value" != 'open' ] ; then
+            print_error "processes SITEQUEUES table entry blocked is $value. It should be open."
+            success+=( 0 )
+        fi
+    done
+    result=$(mysql_dB_command_return "processes" "SELECT userId FROM PRIORITY WHERE userId=1235890 AND maxUnfinishedJobs=10000 AND maxTotalCpuCost=10000 AND  maxTotalRunningTime=10000 ;" | tail -n +6)
+    if [ "$result" != 1235890 ]; then
+        print_error "processes PRIORITY table entry (userId=1235890 AND maxUnfinishedJobs=10000 AND maxTotalCpuCost=10000 AND  maxTotalRunningTime=10000 ) is not found."
+        success+=( 0 )
+    fi
+    result=$(mysql_dB_command_return "processes" "SELECT siteId FROM SITEQUEUES WHERE siteId='-1' AND site='unassigned::site';" | tail -n +6)
+    if [ "$result" != -1 ]; then
+        print_error "processes SITEQUEUES table entry (siteId='-1' AND site='unassigned::site') is not found."
+        success+=( 0 )
+    fi
+    if [[ ! " ${success[*]} " =~  0  ]]; then
+        print_success "Optimiser operations are correct."
+    else
+        print_error "Optimiser has not run or operations are incomplete."
+    fi
+}
 
-# startDB
-# mysqld --defaults-file=$my_cnf --initialize-insecure 
+
 mkdir -p $sql_home
 echo -e "$my_cnf_content" > $my_cnf
 
@@ -321,5 +345,7 @@ if [[ ! " ${success[*]} " =~  0  ]]; then
     print_success "processes SITESONAR_CONSTRAINTS table entries are correct."
 fi
 check_add_to_sitequeues
+
+check_optimizer
 
 rm -r $sql_home
