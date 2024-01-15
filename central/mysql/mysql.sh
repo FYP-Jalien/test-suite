@@ -268,6 +268,23 @@ function check_add_to_sitequeues(){
     
 }
 
+function check_add_status(){
+    success=()
+    while IFS= read -r n
+    do
+        code=$(echo "$n" | cut -d "," -f 1)
+        status=$(echo "$n" | cut -d "," -f 2)
+        result=$(mysql_dB_command_return "processes" "SELECT statusId FROM QUEUE_STATUS WHERE statusId='$code' AND status=$status ;" | tail -n +6)
+        if [ "$result" != "$code" ]; then
+            print_error "processes QUEUE_STATUS table entry (statusId='$code' AND status='$status' ) is not found."
+            success+=( 0 )
+        fi
+    done < <(grep -v '^ *#' < ${sql_templates}/status_codes.txt)
+    if [[ ! " ${success[*]} " =~  0  ]]; then
+        print_success "processes QUEUE_STATUS table entries are correct."
+    fi
+}
+
 function check_optimizer(){
     success=()
     result=$(mysql_dB_command_return "processes" "SELECT maxJobs, maxqueued FROM HOSTS ;" | tail -n +6)
@@ -345,6 +362,7 @@ if [[ ! " ${success[*]} " =~  0  ]]; then
     print_success "processes SITESONAR_CONSTRAINTS table entries are correct."
 fi
 check_add_to_sitequeues
+check_add_status
 
 check_optimizer
 
