@@ -113,18 +113,18 @@ function check_add_to_index_table(){
     result=$(mysql_catalogue_dB_command "$1" "SELECT hostIndex FROM INDEXTABLE WHERE hostIndex='$2' AND tableName='$3' AND lfn='$4';" | tail -n +6)
     if [ "$result" != "$2" ]; then
         print_error "$1 INDEX table entry (hostIndex='$2' AND tableName='$3' AND lfn='$4') is not found."
-        echo 0
+        return 0
     fi
-    echo 1
+    return 1
 }
 
 function check_add_to_hosts_table(){
     result=$(mysql_catalogue_dB_command "$1" "SELECT hostIndex FROM HOSTS WHERE hostIndex='$2' AND address='$3' AND db='$4' AND driver='mysql';" | tail -n +6)
     if [ "$result" != "$2" ]; then
         print_error "$1 HOSTS table entry (hostIndex='$2' AND address='$3' AND db='$4' AND driver='mysql') is not found."
-        echo 0
+        return 0
     fi
-    echo 1
+    return 1
 }
 
 function check_add_to_l0l_table(){
@@ -153,11 +153,19 @@ function check_parent_dir_add_to_l0l_table(){
 
 
 function check_catalogue_initial_directories_common(){
-    check_add_to_GUID_index_table "$1" 1 1 0 
-    if [ "$(check_add_to_index_table "$1" 1 0 /)" -eq 1 ] && [ "$(check_add_to_index_table "$1" 2 0 $base_home_dir)" -eq 1 ]; then
+    check_add_to_GUID_index_table "$1" 1 1 0
+    check_add_to_index_table "$1" 1 0 / 
+    res1=$?
+    check_add_to_index_table "$1" 2 0 $base_home_dir
+    res2=$?
+    if [ $res1 -eq 1 ] && [ $res2 -eq 1 ]; then
         print_success "$1 INDEXTABLE table entries are correct."
     fi
-    if [ "$(check_add_to_hosts_table "$1" 1 "${VO_name}:${sql_port}" $data_dB)" -eq 1 ] && [ "$(check_add_to_hosts_table "$1" 2 "${VO_name}:${sql_port}" $user_dB)" -eq 1 ]; then
+    check_add_to_hosts_table "$1" 1 "${VO_name}:${sql_port}" $data_dB
+    res1=$?
+    check_add_to_hosts_table "$1" 2 "${VO_name}:${sql_port}" $user_dB
+    res2=$?
+    if [ $res1 -eq 1 ] && [ $res2 -eq 1 ]; then
         print_success "$1 HOSTS table entries are correct."
     fi
 }
