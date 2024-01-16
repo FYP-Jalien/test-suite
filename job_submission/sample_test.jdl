@@ -1,0 +1,3 @@
+Executable = "/localhost/localdomain/user/j/jalien/testscript.sh";
+Output = {stdout@disk=1};
+OutputDir = "/localhost/localdomain/user/j/jalien/output_dir_new/";
