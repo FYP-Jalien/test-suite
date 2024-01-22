@@ -37,7 +37,7 @@ if [ ${#matching_files[@]} -gt 0 ]; then
     validate_content "JALIEN_TOKEN_KEY"
     # Check if JALIEN_TOKEN_Cert exists in the latest file
     validate_content "JALIEN_TOKEN_CERT"
-    # Check if JALIEN_TOKEN_CAdir exists in the latest file
+    # Check if JALIEN_JOBAGENT_CMD exists in the latest file
     validate_content "JALIEN_JOBAGENT_CMD"
 
     exit 0
