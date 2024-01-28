@@ -8,14 +8,15 @@ output1=$(sudo docker exec -it "$container_name" /bin/bash -c "condor_q")
 output2=$(sudo docker exec -it "$container_name" /bin/bash -c "condor_status")
 
 # Check if condor_q is working.
-if [[ "$output1" == *"-- Schedd: localhost.localdomain"* ]]; then
+if echo "$output1" | grep -q 'Schedd: localhost.localdomain'; then
     print_success "Success! condor_q is working."
 else
     print_error "Error! condor_q is not working."
+    exit 1
 fi
 
 # Check if condor_status is working.
-if [[ "$output2" == *"Name"* ]]; then
+if echo "$output2" | grep -q 'Name\s*OpSys'; then
     print_success "Success! condor_status is working."
 else
     print_error "Error! condor_status is not working."
