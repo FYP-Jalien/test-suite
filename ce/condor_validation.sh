@@ -16,7 +16,7 @@ else
 fi
 
 # Check if condor_status is working.
-if echo "$output2" | grep -q 'Name\s*OpSys'; then
+if echo "$output2" | grep -q 'Name\s*OpSys\s*Arch\s*State\s*Activity\s*LoadAv\s*Mem\s*ActvtyTime'; then
     print_success "Success! condor_status is working."
 else
     print_error "Error! condor_status is not working."
