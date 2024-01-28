@@ -1,5 +1,12 @@
 #!/bin/bash
 
+: <<'COMMENT'
+This script is used to test the jdl file is created in the htcondor directory in the CE container.
+It will only looks for most recent file which should be created on current date.
+After checking the file presence it will also check the content in the .jdl file.
+COMMENT
+
+
 source ../func/messages.sh
 
 current_date=$(date +'%Y-%m-%d')
@@ -7,9 +14,12 @@ directory_path="/home/submituser/htcondor/$current_date"
 container_name="shared_volume-JCentral-dev-CE-1"
 
 # Get the most recent .jdl file
-most_recent_jdl=$(sudo docker exec -it "$container_name" bash -c "ls -t $directory_path/*.jdl | head -n 1")
+most_recent_jdl=$(sudo docker exec -it "$container_name" bash -c "ls -t $directory_path/*.jdl 2>/dev/null | head -n 1")
 
-# Check if the most recent .jdl file exists
+# Remove trailing \r characters from the file name
+most_recent_jdl=$(echo "$most_recent_jdl" | tr -d '\r')
+
+# Check if any .jdl file exists
 if [ -n "$most_recent_jdl" ]; then
     print_success "Success. jdl file found: $most_recent_jdl"
 else
@@ -19,8 +29,8 @@ fi
 
 # Function to validate the content of the most recent .jdl file.
 validate_content(){
-    if sudo docker exec -it "$container_name" /bin/bash -c "grep -q "$1" '$most_recent_jdl'"; then
-        print_success "Success. $1 found in .jdl file."
+    if sudo docker exec -it "$container_name" /bin/bash -c "grep -q '$1' '$most_recent_jdl'"; then
+        print_success "Success. $1 variable found in .jdl file."
     else
         print_error "$1 not found in .jdl file."
         exit 1
@@ -29,6 +39,6 @@ validate_content(){
 
 # Validate the content of the most recent .jdl file.
 validate_content "cmd"
-
-
-
+validate_content "output"
+validate_content "error"
+validate_content "log"
