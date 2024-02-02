@@ -14,6 +14,10 @@ source run_all_tests.sh
 cd schedd/
 source run_all_tests.sh
 
+# Running the se tests.
+cd se/
+source run_all_tests.sh
+
 
 # Running the CE tests.
 cd ce/
