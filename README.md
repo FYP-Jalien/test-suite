@@ -18,3 +18,9 @@ The JAliEn Replica project focuses on providing a simplified environment for tes
 
 - **develop**: The develop branch contains the latest changes and updates.
 - **main**: The main branch houses stable changes that have been thoroughly tested.
+
+## When Changing the test files
+- If you adding new files or removing a test file, please update the `run_all_test.sh` file inside the directory.
+
+## How to run the tests
+Run the `sudo test.sh` file in the root directory.
