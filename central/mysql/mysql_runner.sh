@@ -2,7 +2,7 @@
 
 source ../../func/messages.sh
 
-container_name="shared_volume_JCentral-dev_1"
+container_name="shared_volume-JCentral-dev-1"
 
 script_path="mysql.sh"
 script_path_in_container="/mysql_test.sh"

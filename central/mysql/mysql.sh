@@ -1,7 +1,6 @@
 #!/bin/bash
 
-func_path="/host_func/"
-source $func_path"messages.sh"
+source ../../func/messages.sh
 
 host=127.0.0.1
 sql_port=3307
