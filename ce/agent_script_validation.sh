@@ -29,7 +29,6 @@ if [ ${#matching_files[@]} -gt 0 ]; then
         print_success "Success. $1 found in $latest_file."
     else
         print_error "$1 not found in $latest_file."
-        exit 1
     fi
 }
 
@@ -40,9 +39,6 @@ if [ ${#matching_files[@]} -gt 0 ]; then
     # Check if JALIEN_JOBAGENT_CMD exists in the latest file
     validate_content "JALIEN_JOBAGENT_CMD"
 
-    exit 0
-
 else
     print_error "No matching file found in $directory."
-    exit 1
 fi

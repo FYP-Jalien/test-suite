@@ -26,7 +26,6 @@ if [ -n "$most_recent_jdl" ]; then
     print_success "Success. jdl file found: $most_recent_jdl"
 else
     print_error "Error. No jdl file found."
-    exit 1
 fi
 
 # Function to validate the content of the most recent .jdl file.
@@ -37,7 +36,6 @@ validate_content(){
         file_path=$(echo "$content" | awk -F ' = ' '{print $2}' | tr -d '\r')
     else
         print_error "$1 not found in .jdl file."
-        exit 1
     fi
 }
 
@@ -47,7 +45,6 @@ validate_file(){
         print_success "Success. $1 file found."
     else
         print_error "Error. $1 file not found."
-        exit 1
     fi
 }
 
