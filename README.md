@@ -23,4 +23,5 @@ The JAliEn Replica project focuses on providing a simplified environment for tes
 - If you adding new files or removing a test file, please update the `run_all_test.sh` file inside the directory.
 
 ## How to run the tests
-Run the `sudo test.sh` file in the root directory.
+- Create a `.env` file using the `.env.example` file as a template.
+- Run the `sudo test.sh` file in the root directory.
