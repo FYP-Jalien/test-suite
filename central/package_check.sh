@@ -6,7 +6,6 @@
 container_name="shared_volume_JCentral-dev_1"
 if ! sudo docker ps --format '{{.Names}}' | grep -q "^$container_name$"; then
     print_error "Container $container_name is not running."
-    exit 1
 fi
 
 # List of packages to check

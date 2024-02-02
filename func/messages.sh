@@ -13,3 +13,8 @@ function print_success() {
 function print_error() {
     echo -e "$error_color$1$reset_color"
 }
+
+# Function to echo test header.
+function print_test_header() {
+    echo -e "\n====== Running all tests for $1 ======\n"
+}

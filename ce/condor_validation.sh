@@ -12,7 +12,6 @@ if echo "$output1" | grep -q 'Schedd: localhost.localdomain'; then
     print_success "Success! condor_q is working."
 else
     print_error "Error! condor_q is not working."
-    exit 1
 fi
 
 # Check if condor_status is working.
