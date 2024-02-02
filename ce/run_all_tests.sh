@@ -1,4 +1,6 @@
-echo -e "\n====== Running all tests for CE ======\n"
+source ../func/messages.sh
+
+print_test_header "CE"
 
 source docker_image_validation.sh
 source container_validation.sh

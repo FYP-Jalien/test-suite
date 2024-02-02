@@ -1,4 +1,6 @@
-echo -e "====== Running all tests for Common ======\n"
+source ../func/messages.sh
+
+print_test_header "Common"
 
 source python3_validation.sh
 source mysql_validation.sh
