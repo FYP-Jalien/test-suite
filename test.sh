@@ -25,3 +25,7 @@ source run_all_tests.sh
 # Running the CE tests.
 cd ce/
 source run_all_tests.sh
+
+# Running the job submission tests.
+cd job_submission/
+source run_all_tests.sh
