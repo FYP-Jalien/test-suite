@@ -2,9 +2,9 @@
 
 source ../func/messages.sh
 
-JALIEN_SETUP_DIR="/home/jananga/FYP/jalien-setup"
+JALIEN_SETUP_DIR="/home/malith/Documents/FYP/jalien-setup"
 
-container_name="shared_volume_schedd_1"
+container_name="shared_volume-schedd-1"
 expected_image="htcondor/cm:10.0.0-el7"
 expected_volumes=( "$JALIEN_SETUP_DIR"/ce-setup/htcondor-conf/pool_password )
 expected_environment="USE_POOL_PASSWORD=yes "
