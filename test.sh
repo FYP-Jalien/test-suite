@@ -18,6 +18,9 @@ source run_all_tests.sh
 cd se/
 source run_all_tests.sh
 
+# Running the central tests.
+cd central/
+source run_all_tests.sh
 
 # Running the CE tests.
 cd ce/
