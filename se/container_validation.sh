@@ -1,14 +1,14 @@
 #!/bin/bash
 
 source ../func/messages.sh
+source ../.env
 
-SHARED_VOLUME="/home/jananga/FYP/SHARED_VOLUME"
 
 container_name="shared_volume_JCentral-dev-SE_1"
 expected_image="xrootd-se"
 expected_command="xrootd -c /etc/xrootd/xrootd-standalone.cfg"
 expected_ports=("1094/tcp")
-expected_volumes=("$SHARED_VOLUME:/jalien-dev" )
+expected_volumes=("$SHARED_VOLUME_PATH:/jalien-dev" )
 
 
 

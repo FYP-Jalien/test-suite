@@ -1,11 +1,13 @@
 #!/bin/bash
 
 source ../func/messages.sh
+source ../.env
 
 alienv_path="./alma-alienv"
 sample_path="./sample_test.jdl"
 testscript_path="./testscript_test.sh"
-shared_volume_env="/home/malith/Documents/FYP/SHARED_VOLUME/env_setup.sh"
+shared_volume_env="$SHARED_VOLUME_PATH/env_setup.sh"
+
 
 # Check if the alienv script exists
 if [ ! -f "$alienv_path" ]; then

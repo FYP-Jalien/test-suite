@@ -1,15 +1,14 @@
 #!/bin/bash
 
 source ../func/messages.sh
+source ../.env
 
-SHARED_VOLUME="/home/jananga/FYP/SHARED_VOLUME"
-JALIEN_SETUP_DIR="/home/jananga/FYP/jalien-setup"
 
 container_name="shared_volume_JCentral-dev_1"
 expected_image="jalien-base-18"
 expected_command="/jalien-setup/bash-setup/entrypoint.sh"
 expected_ports=("8098/tcp" "8097/tcp" "3307/tcp" "8389/tcp")
-expected_volumes=("$SHARED_VOLUME:/jalien-dev:rw" "$JALIEN_SETUP_DIR:/jalien-setup:ro")
+expected_volumes=("$SHARED_VOLUME_PATH:/jalien-dev:rw" "$JALIEN_SETUP_PATH:/jalien-setup:ro")
 expected_environment="SE_HOST=JCentral-dev-SE "
 
 
