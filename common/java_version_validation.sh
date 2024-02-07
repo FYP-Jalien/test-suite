@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ../func/messages.sh
+
 # Function to compare Java versions
 compare_versions() {
     local v1="$1"
@@ -39,7 +41,7 @@ required_version="11.08"
 compare_versions "$java_version" "$required_version"
 
 if [ $? -eq 0 ] || [ $? -eq 1 ]; then
-    echo "Java version is 11.08 or above."
+    print_success "Java version is 11.08 or above."
 else
-    echo "Java version is below 11.08. Please install a newer version."
+    print_error "Java version is below 11.08. Please install a newer version."
 fi

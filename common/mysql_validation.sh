@@ -1,8 +1,10 @@
 #!/bin/bash
 
+source ../func/messages.sh
+
 # Check if MySQL is installed
 if command -v mysql &> /dev/null ; then
-    echo "MySQL is installed on the system."
+    print_success "MySQL is installed on the system."
 else
-    echo "MySQL is not installed on the system. Please install MySQL before proceeding."
+    print_error "MySQL is not installed on the system. Please install MySQL before proceeding."
 fi
