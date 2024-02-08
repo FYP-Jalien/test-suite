@@ -1,11 +1,11 @@
 #!/bin/bash
 
-. ../func/messages.sh
+source ../func/messages.sh
+source ../.env
 
 # Docker container name or ID
-container_name="shared_volume_JCentral-dev_1"
-if ! sudo docker ps --format '{{.Names}}' | grep -q "^$container_name$"; then
-    print_error "Container $container_name is not running."
+if ! sudo docker ps --format '{{.Names}}' | grep -q "^$CONTAINER_NAME_CENTRAL$"; then
+    print_error "Container $CONTAINER_NAME_CENTRAL is not running."
 fi
 
 # List of packages to check
@@ -14,7 +14,7 @@ packages=(
 )
 
 for package_name in "${packages[@]}"; do
-    if sudo docker exec "$container_name" dpkg -l | grep -q "^ii.*$package_name"; then
+    if sudo docker exec "$CONTAINER_NAME_CENTRAL" dpkg -l | grep -q "^ii.*$package_name"; then
         print_success "$package_name is installed."
     else
         print_error "$package_name is not installed."

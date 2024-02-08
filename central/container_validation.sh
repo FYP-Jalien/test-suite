@@ -4,7 +4,7 @@ source ../func/messages.sh
 source ../.env
 
 
-container_name="shared_volume_JCentral-dev_1"
+container_name=$CONTAINER_NAME_CENTRAL
 expected_image="jalien-base-18"
 expected_command="/jalien-setup/bash-setup/entrypoint.sh"
 expected_ports=("8098/tcp" "8097/tcp" "3307/tcp" "8389/tcp")
