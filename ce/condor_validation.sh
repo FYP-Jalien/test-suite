@@ -1,11 +1,12 @@
 #!/bin/bash
 source ../func/messages.sh
+source ../.env
 
 container_name="shared_volume-JCentral-dev-CE-1"
 
 # Log in to the Docker container and run the "condor_q" command.
-output1=$(sudo docker exec -it "$container_name" /bin/bash -c "condor_q")
-output2=$(sudo docker exec -it "$container_name" /bin/bash -c "condor_status")
+output1=$(sudo docker exec -it "$CONTAINER_NAME_CE" /bin/bash -c "condor_q")
+output2=$(sudo docker exec -it "$CONTAINER_NAME_CE" /bin/bash -c "condor_status")
 
 # Check if condor_q is working.
 if echo "$output1" | grep -q 'Schedd: localhost.localdomain'; then
