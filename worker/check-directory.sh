@@ -1,9 +1,7 @@
 #!/bin/bash
+source ../.env
 
-# Docker container name or ID
-container_name=$(sudo docker ps --format "{{.Names}}" | grep "worker1")
-
-sudo docker exec -it $container_name /bin/bash
+sudo docker exec -it $CONTAINER_NAME_WORKER /bin/bash
 
 cd /var/lib/condor/execute
 
