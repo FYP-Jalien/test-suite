@@ -1,8 +1,8 @@
 #!/bin/bash
 
 source ../func/messages.sh
+source ../.env
 
-container_name="shared_volume-JCentral-dev-CE-1"
 
 # Log in to the Docker container and run the "condor_q" command
 directory="/home/submituser/tmp"
@@ -17,7 +17,7 @@ while IFS= read -r -d '' file; do
         matching_files+=("$file")
         print_success "Success. Found job agent script."
     fi
-done < <(sudo docker exec -it "$container_name" find "$directory" -type f -name "agent.startup.*" -print0)
+done < <(sudo docker exec -it "$CONTAINER_NAME_CE" find "$directory" -type f -name "agent.startup.*" -print0)
 
 # Check if any matching file is found
 if [ ${#matching_files[@]} -gt 0 ]; then
@@ -25,7 +25,7 @@ if [ ${#matching_files[@]} -gt 0 ]; then
     latest_file=$(printf "%s\n" "${matching_files[@]}" | sort -t. -k4 -n | tail -n 1)
 
     validate_content(){
-    if sudo docker exec -it "$container_name" /bin/bash -c "grep -q "$1" '$latest_file'"; then
+    if sudo docker exec -it "$CONTAINER_NAME_CE" /bin/bash -c "grep -q "$1" '$latest_file'"; then
         print_success "Success. $1 found in $latest_file."
     else
         print_error "$1 not found in $latest_file."
