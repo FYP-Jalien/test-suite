@@ -22,8 +22,6 @@ else
     exit 1
 fi
 
-
-
 id=$((id + 1))
 name="Schedd Container Image Check"
 description="Schedd container should be running with $expected_image."
@@ -62,7 +60,7 @@ else
 fi
 
 id=$((id + 1))
-name="Schedd Container Volume Check"
+name="Schedd Container Env Check"
 expected_environment_string=$(convert_array_to_string "${expected_environment[@]}")
 description="Schedd container should be running with $expected_environment_string mounted."
 level="Critical"
@@ -81,3 +79,4 @@ else
     print_full_test "$id" "$name" $status "$description" $level "$message"
     exit 1
 fi
+

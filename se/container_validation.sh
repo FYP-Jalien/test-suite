@@ -43,6 +43,7 @@ expected_volumes_string=$(convert_array_to_string "${expected_volumes[@]}")
 description="SE container should be running with $expected_volumes_string mounted."
 level="Critical"
 actual_volumes=$(sudo docker inspect --format='{{range .Mounts}}{{.Source}}:{{.Destination}}:{{.Mode}} {{end}}' "$CONTAINER_NAME_SE")
+status="PASSED"
 for volume in "${expected_volumes[@]}"; do
     if [[ ! " ${actual_volumes[*]} " =~ $volume ]]; then
         status="FAILED"
@@ -80,6 +81,7 @@ expected_ports_string=$(convert_array_to_string "${expected_ports[@]}")
 description="SE container should be running with having ports $expected_ports_string."
 level="Critical"
 actual_ports=$(sudo docker inspect --format='{{range $p, $conf := .NetworkSettings.Ports}}{{$p}} {{end}}' "$CONTAINER_NAME_SE")
+status="PASSED"
 for port in "${expected_ports[@]}"; do
     if [[ ! " ${actual_ports[*]} " =~ $port ]]; then
         status="FAILED"
@@ -93,4 +95,21 @@ if [ "$status" != "FAILED" ]; then
 else
     print_full_test "$id" "$name" $status "$description" $level "$message"
     exit 1
+fi
+
+expected_hostname="JCentral-dev-SE"
+id=$((id + 1))
+name="SE Container Hostname Check"
+description="SE container should have $expected_hostname"
+level="Critical"
+actual_hostname=$(sudo docker inspect --format='{{.Config.Hostname}}' "$CONTAINER_NAME_SE" )
+if [ "$actual_hostname" != $expected_hostname ]; then
+    status="FAILED"
+    message="Error: $CONTAINER_NAME_SE container is expected to have hostname $expected_hostname but has hostname $actual_hostname."
+    print_full_test "$id" "$name" $status "$description" $level "$message"
+    exit 1
+else
+    status="PASSED"
+    message="$CONTAINER_NAME_SE hostname is $actual_hostname"
+    print_full_test "$id" "$name" $status "$description" $level "$message"
 fi
