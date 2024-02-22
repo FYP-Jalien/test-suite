@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ../../func/messages.sh
+source /host_func/messages.sh
 source ../../.env
 
 script_path="mysql.sh"

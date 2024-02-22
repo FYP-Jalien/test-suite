@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ../../func/messages.sh
+source /host_func/messages.sh
 
 host=127.0.0.1
 sql_port=3307
