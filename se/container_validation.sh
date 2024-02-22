@@ -1,56 +1,96 @@
 #!/bin/bash
 
-source ../func/messages.sh
-source ../.env
-
 expected_image="xrootd-se"
 expected_command="xrootd -c /etc/xrootd/xrootd-standalone.cfg"
 expected_ports=("1094/tcp")
-expected_volumes=("$SHARED_VOLUME_PATH:/jalien-dev" )
+expected_volumes=("$SHARED_VOLUME_PATH:/jalien-dev")
 
-
-
-# Check if the Docker container is running
-if sudo docker ps --format '{{.Names}}' | grep -qw $CONTAINER_NAME_SE; then
-    print_success "The JCentral container is running."
-
-    # Check image
-    actual_image=$(sudo docker inspect --format='{{.Config.Image}}' "$CONTAINER_NAME_SE")
-    if [ "$actual_image" != "$expected_image" ]; then
-        print_error "Error: $CONTAINER_NAME_SE is not using the expected image '$expected_image'."
-    else
-        print_success "Image is correct: $expected_image"
-    fi
-
-    # Check command
-    actual_command=$(sudo docker inspect --format='{{.Config.Cmd}}' "$CONTAINER_NAME_SE")
-    if [ ${#actual_command[@]} -eq 1 ] && [ "${actual_command[0]}" = "$expected_command" ]; then
-        print_error "Error: $CONTAINER_NAME_SE does not have the expected command '$expected_command'."
-    else
-        print_success "Command is correct: $expected_command"
-    fi
-
-    # Check ports
-    actual_ports=$(sudo docker inspect --format='{{range $p, $conf := .NetworkSettings.Ports}}{{$p}} {{end}}' "$CONTAINER_NAME_SE")
-    for port in "${expected_ports[@]}"; do
-        if [[ ! " ${actual_ports[*]} " =~  $port  ]]; then
-            print_error "Error: Port $port is not found in the container's ports."
-        else
-            print_success "Port $port is correct."
-        fi
-    done
-
-    # Check volumes
-    actual_volumes=$(sudo docker inspect --format='{{range .Mounts}}{{.Source}}:{{.Destination}}:{{.Mode}} {{end}}' "$CONTAINER_NAME_SE")
-    for volume in "${expected_volumes[@]}"; do
-        if [[ ! " ${actual_volumes[*]} " =~  $volume  ]]; then
-            print_error "Error: Volume $volume is not found in the container's volumes."
-        else
-            print_success "Volume $volume is correct."
-        fi
-    done
-
+id=$((id + 1))
+name="SE Container Up Check"
+description="SE container should be running."
+level="Critical"
+if sudo docker ps --format '{{.Names}}' | grep -qw "$CONTAINER_NAME_SE"; then
+    status="PASSED"
+    message="The $CONTAINER_NAME_SE is running."
+    print_full_test "$id" "$name" $status "$description" $level "$message"
 else
-    print_error "The $CONTAINER_NAME_SE is not running."
+    status="FAILED"
+    message="The $CONTAINER_NAME_SE is not running."
+    echo $status
+    print_full_test "$id" "$name" $status "$description" $level "$message"
+    exit 1
 fi
 
+id=$((id + 1))
+name="SE Container Image Check"
+description="SE container should be running with $expected_image."
+level="Critical"
+actual_image=$(sudo docker inspect --format='{{.Config.Image}}' "$CONTAINER_NAME_SE")
+if [ "$actual_image" == "$expected_image" ]; then
+    status="PASSED"
+    message="The $CONTAINER_NAME_SE is running with $actual_image."
+    print_full_test "$id" "$name" $status "$description" $level "$message"
+else
+    status="FAILED"
+    message="The $CONTAINER_NAME_SE is expected to run with $expected_image but running with $actual_image."
+    print_full_test "$id" "$name" $status "$description" $level "$message"
+    exit 1
+fi
+
+id=$((id + 1))
+name="SE Container Volume Check"
+expected_volumes_string=$(convert_array_to_string "${expected_volumes[@]}")
+description="SE container should be running with $expected_volumes_string mounted."
+level="Critical"
+actual_volumes=$(sudo docker inspect --format='{{range .Mounts}}{{.Source}}:{{.Destination}}:{{.Mode}} {{end}}' "$CONTAINER_NAME_SE")
+for volume in "${expected_volumes[@]}"; do
+    if [[ ! " ${actual_volumes[*]} " =~ $volume ]]; then
+        status="FAILED"
+        message="Error: Volume $volume is not mounted in the $CONTAINER_NAME_SE container's volumes."
+    fi
+done
+if [ "$status" != "FAILED" ]; then
+    status="PASSED"
+    message="The $CONTAINER_NAME_SE is running with $actual_volumes."
+    print_full_test "$id" "$name" $status "$description" $level "$message"
+else
+    print_full_test "$id" "$name" $status "$description" $level "$message"
+    exit 1
+fi
+
+id=$((id + 1))
+name="SE Container Command Check"
+description="SE container should be running with command $expected_command"
+level="Critical"
+actual_command=$(sudo docker inspect --format='{{.Config.Cmd}}' "$CONTAINER_NAME_SE")
+if [ ${#actual_command[@]} -eq 1 ] && [ "${actual_command[0]}" = "$expected_command" ]; then
+    status="FAILED"
+    message="Error: Volume $volume is not mounted in the $CONTAINER_NAME_SE container's volumes."
+    print_full_test "$id" "$name" $status "$description" $level "$message"
+    exit 1
+else
+    status="PASSED"
+    message="The $CONTAINER_NAME_SE is running with $actual_volumes."
+    print_full_test "$id" "$name" $status "$description" $level "$message"
+fi
+
+id=$((id + 1))
+name="SE Container Port Check"
+expected_ports_string=$(convert_array_to_string "${expected_ports[@]}")
+description="SE container should be running with having ports $expected_ports_string."
+level="Critical"
+actual_ports=$(sudo docker inspect --format='{{range $p, $conf := .NetworkSettings.Ports}}{{$p}} {{end}}' "$CONTAINER_NAME_SE")
+for port in "${expected_ports[@]}"; do
+    if [[ ! " ${actual_ports[*]} " =~ $port ]]; then
+        status="FAILED"
+        message="Error: Port $port is not in the $CONTAINER_NAME_SE container's ports."
+    fi
+done
+if [ "$status" != "FAILED" ]; then
+    status="PASSED"
+    message="The $CONTAINER_NAME_SE is running with $actual_ports."
+    print_full_test "$id" "$name" $status "$description" $level "$message"
+else
+    print_full_test "$id" "$name" $status "$description" $level "$message"
+    exit 1
+fi

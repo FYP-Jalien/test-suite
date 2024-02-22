@@ -1,19 +1,5 @@
 #!/bin/bash
 
-# Check if the script is run as root.
-# if [[ $EUID -ne 0 ]]; then
-#     echo "This script must be run as root. Please use sudo."
-#     exit 1
-# fi
-
-# # Running the common tests.
-# cd common/
-# source run_all_tests.sh
-
-# # Running the schedd tests.
-# cd schedd/
-# source run_all_tests.sh
-
 # # Running the se tests.
 # cd se/
 # source run_all_tests.sh
@@ -32,8 +18,14 @@
 
 # shellcheck disable=SC1091
 source func/messages.sh
+source func/conversions.sh
+source .env
+
+
 
 id=0
 
 source common/index.sh
+source schedd/index.sh
+source se/index.sh
 
