@@ -60,7 +60,6 @@ if command -v java cersion &> /dev/null ; then
 else
     status="FAILED"
     message="Host machine requires Java to be installed to compile the jalien"
-    exit 1
 fi
 
 print_full_test "$id" "$name" $status "$description" $level "$message"

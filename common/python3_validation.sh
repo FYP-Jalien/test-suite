@@ -13,7 +13,6 @@ if command -v python3 &> /dev/null ; then
 else
     status="FAILED"
     message="Python 3 is not installed on the system. Please install Python 3 before proceeding."
-    exit 1
 fi
 
 print_full_test "$id" "$name" $status "$description" $level "$message"

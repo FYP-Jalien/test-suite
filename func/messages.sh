@@ -29,6 +29,14 @@ function print_full_test() {
     if [[ "$test_status" == "PASSED" ]]; then
         print_success "Test $test_id: $test_name - $test_status"
     else
-        print_error "Test $test_id: $test_name - $test_status $test_level $test_description $test_message"
+        if [[ "$test_level" == "Critical" ]]; then
+            print_error "Test $test_id: $test_name - $test_status $test_level $test_description $test_message"
+            exit 1
+        elif [[ "$test_level" == "Warning" ]]; then
+            print_error "Test $test_id: $test_name - $test_status $test_level $test_description $test_message"
+        elif [[ "$test_level" == "Minor" ]]; then
+            print_error "Test $test_id: $test_name - $test_status $test_message"
+        fi
     fi
+
 }

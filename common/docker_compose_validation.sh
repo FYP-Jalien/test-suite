@@ -11,7 +11,6 @@ if command -v docker compose &> /dev/null ; then
 else
     status="FAILED"
     message="Docker Compose is not installed on the system."
-    exit 1
 fi
 
 print_full_test "$id" "$name" $status "$description" $level "$message"

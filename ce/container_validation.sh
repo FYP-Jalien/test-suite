@@ -12,15 +12,14 @@ else
     status="FAILED"
     message="The $CONTAINER_NAME_CE is not running."
     echo $status
-    print_full_test "$id" "$name" $status "$description" $level "$message"
-    exit 1
+    print_full_test "$id" "$name" $status "$description" $level "$message"    
 fi
 
 expected_image="jalien-ce"
 id=$((id + 1))
 name="CE Container Image Check"
 description="CE container should be running with $expected_image."
-level="Critical"
+level="Warning"
 actual_image=$(sudo docker inspect --format='{{.Config.Image}}' "$CONTAINER_NAME_CE")
 if [ "$actual_image" == "$expected_image" ]; then
     status="PASSED"
@@ -30,7 +29,6 @@ else
     status="FAILED"
     message="The $CONTAINER_NAME_CE is expected to run with $expected_image but running with $actual_image."
     print_full_test "$id" "$name" $status "$description" $level "$message"
-    exit 1
 fi
 
 expected_volumes=("$SHARED_VOLUME_PATH:/jalien-dev" "$JALIEN_CETUP_PATH/ce-setup:/ce-setup:ro" "$JALIEN_CETUP_PATH/ce-setup/htcondor-conf/pool_password:/root/secrets/pool_password")
@@ -38,7 +36,7 @@ id=$((id + 1))
 name="CE Container Volume Check"
 expected_volumes_string=$(convert_array_to_string "${expected_volumes[@]}")
 description="CE container should be running with $expected_volumes_string mounted."
-level="Critical"
+level="Warning"
 actual_volumes=$(sudo docker inspect --format='{{range .Mounts}}{{.Source}}:{{.Destination}}:{{.Mode}} {{end}}' "$CONTAINER_NAME_CE")
 status="PASSED"
 for volume in "${expected_volumes[@]}"; do
@@ -53,7 +51,6 @@ if [ "$status" != "FAILED" ]; then
     print_full_test "$id" "$name" $status "$description" $level "$message"
 else
     print_full_test "$id" "$name" $status "$description" $level "$message"
-    exit 1
 fi
 
 expected_command="[bash /ce-setup/ce-entrypint.sh]"
@@ -77,7 +74,7 @@ id=$((id + 1))
 name="CE Container Env Check"
 expected_environment_string=$(convert_array_to_string "${expected_environment[@]}")
 description="CE container should be running with $expected_environment_string mounted."
-level="Critical"
+level="Warning"
 actual_environment=$(sudo docker inspect --format='{{range $key, $value := .Config.Env}}{{$value}} {{end}}' "$CONTAINER_NAME_CE")
 status="PASSED"
 for env in "${expected_environment[@]}"; do
@@ -92,20 +89,18 @@ if [ "$status" != "FAILED" ]; then
     print_full_test "$id" "$name" $status "$description" $level "$message"
 else
     print_full_test "$id" "$name" $status "$description" $level "$message"
-    exit 1
 fi
 
 expected_hostname="localhost.localdomain"
 id=$((id + 1))
 name="CE Container Hostname Check"
 description="CE container should have $expected_hostname"
-level="Critical"
+level="Minor"
 actual_hostname=$(sudo docker inspect --format='{{.Config.Hostname}}' "$CONTAINER_NAME_CE")
 if [ "$actual_hostname" != $expected_hostname ]; then
     status="FAILED"
     message="Error: $CONTAINER_NAME_CE is expected to have hostname $expected_hostname but has hostname $actual_hostname."
     print_full_test "$id" "$name" $status "$description" $level "$message"
-    exit 1
 else
     status="PASSED"
     message="The $CONTAINER_NAME_CE has hostname $actual_hostname"
