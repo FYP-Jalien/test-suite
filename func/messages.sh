@@ -23,9 +23,9 @@ function print_full_test() {
     test_id=$1
     test_name=$2
     test_status=$3
-    test_level=$5
-    test_description=$6
-    test_message=$7
+    test_description=$4
+        test_level=$5
+    test_message=$6
     if [[ "$test_status" == "PASSED" ]]; then
         print_success "Test $test_id: $test_name - $test_status"
     else
