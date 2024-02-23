@@ -1,25 +1,26 @@
 #!/bin/bash
 
-source ../func/messages.sh
-source ../.env
+id=$((id + 1))
+name="CENTRAL Container Package Check"
+level="Critical"
 
-# Docker container name or ID
-if ! sudo docker ps --format '{{.Names}}' | grep -q "^$CONTAINER_NAME_CENTRAL$"; then
-    print_error "Container $CONTAINER_NAME_CENTRAL is not running."
-fi
-
-# List of packages to check
 packages=(
     debconf-utils mysql-server openjdk-11-jdk python3 python3-pip git slapd ldap-utils rsync vim tmux entr less cmake zlib1g-dev uuid uuid-dev libssl-dev wget htcondor supervisor environment-modules tcl
 )
 
+description="CENTRAL container should have these packages installed: $(convert_array_to_string "${packages[@]}")."
+
+status="PASSED"
 for package_name in "${packages[@]}"; do
-    if sudo docker exec "$CONTAINER_NAME_CENTRAL" dpkg -l | grep -q "^ii.*$package_name"; then
-        print_success "$package_name is installed."
-    else
-        print_error "$package_name is not installed."
+    if ! sudo docker exec "$CONTAINER_NAME_CENTRAL" dpkg -l | grep -q "^ii.*$package_name"; then
+        status="FAILED"
+        message="$package_name is not installed."
+        print_full_test "$id" "$name" $status "$description" $level "$message"
     fi
 done
 
-
-## Check for xrootd
+if [ "$status" != "FAILED" ]; then
+    status="PASSED"
+    message="All packages are installed."
+    print_full_test "$id" "$name" $status "$description" $level "$message"
+fi
