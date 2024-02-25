@@ -1,0 +1,15 @@
+
+
+Running strucutre is as follows.
+
+You cannot run scripts one by one.
+Use index.sh at root to run scripts.
+It will index.sh scripts in sub folders to run the whole tests.
+This approach was taken because to avoid errors due to script import paths.
+FYI, flagged approach will be deployed to run tests customizedly usin the root index.sh
+
+func folder has scripts for fucntions which are being used commonly.
+    messages-->print_full_test will be used to output test execution result. Please ue only that to display test results.
+
+
+
