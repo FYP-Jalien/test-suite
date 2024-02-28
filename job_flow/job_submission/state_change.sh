@@ -39,22 +39,19 @@ id=$((id + 1))
 name="Job state transition check: from W to _D"
 level="Critical"
 description="Job should be moved from state W to state _D"
+echo "Waiting 5 minutes to complete the job."
+sleep 300
+state=$(get_job_state "$job_id")
+if [[ -z $state ]]; then
+    print_full_test "$id" "$name" "FAILED" "$description" "$level" "Job ID $job_id either not found or has a different format."
+fi
+
 if [[ $state == "W" ]]; then
-    echo "Waiting 5 minutes to complete the job."
-    sleep 300
-    state=$(get_job_state "$job_id")
-    if [[ -z $state ]]; then
-        print_full_test "$id" "$name" "FAILED" "$description" "$level" "Job ID $job_id either not found or has a different format."
-    fi
-
-    if [[ $state == "W" ]]; then
-        print_full_test "$id" "$name" "FAILED" "$description" "$level" "$job_id still is W state. Please check the logs"
-    elif [[ $state == "D" ]]; then
-        print_full_test "$id" "$name" "PASSED" "$description" "$level" "Job $job_id is in $state State."
-    elif [[ $state == "ESV" ]]; then
-        print_full_test "$id" "$name" "FAILED" "$description" "$level" "An error occured in saving the job output. This can be due to already existing output file/directory."
-    else
-        print_full_test "$id" "$name" "FAILED" "$description" "$level" "Unexpected state : $state"
-    fi
-
+    print_full_test "$id" "$name" "FAILED" "$description" "$level" "$job_id still is W state. Please check the logs"
+elif [[ $state == "D" ]]; then
+    print_full_test "$id" "$name" "PASSED" "$description" "$level" "Job $job_id is in $state State."
+elif [[ $state == "ESV" ]]; then
+    print_full_test "$id" "$name" "FAILED" "$description" "Warning" "An error occured in saving the job output. This can be due to already existing output file/directory."
+else
+    print_full_test "$id" "$name" "FAILED" "$description" "$level" "Unexpected state : $state"
 fi
