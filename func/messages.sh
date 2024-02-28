@@ -35,7 +35,7 @@ function print_full_test() {
         elif [[ "$test_level" == "Warning" ]]; then
             print_error "Test $test_id: $test_name - $test_status $test_level $test_description $test_message"
         elif [[ "$test_level" == "Minor" ]]; then
-            print_error "Test $test_id: $test_name - $test_status $test_message"
+            print_error "Test $test_id: $test_name - $test_status $test_level  $test_message"
         fi
     fi
 
