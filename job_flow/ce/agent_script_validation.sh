@@ -4,6 +4,16 @@ directory="/home/submituser/tmp"
 pattern="agent.startup\.[0-9]+"
 matching_files=()
 
+id=$((id + 1))
+name="Agent Startup Script existence check"
+level="Critical"
+description="Agent start up scripts should be created. If not make sure the optimiser is running. If the optimiser is just started wait for a few minutes and check again. If the issue persists, try restarting the optimiser."
+
+if sudo docker exec "$CONTAINER_NAME_CE" [ ! -d "$directory" ]; then
+    print_full_test "$id" "$name" "FAILED" "$description" "$level" "Directory $directory does not exist."
+    exit 1
+fi
+
 # Iterate over files in the directory and check if any matches the regex
 while IFS= read -r -d '' file; do
     if [[ "$file" =~ $pattern ]]; then
@@ -11,10 +21,6 @@ while IFS= read -r -d '' file; do
     fi
 done < <(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "agent.startup.*" -print0)
 
-id=$((id + 1))
-name="Agent Startup Script existence check"
-level="Critical"
-description="Agent start up scripts should be created. If not make sure the optimiser is running. If the optimiser is just started wait for a few minutes and check again. If the issue persists, try restarting the optimiser."
 # Check if any matching file is found
 if [ ${#matching_files[@]} -gt 0 ]; then
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "Agent start up scripts found."
