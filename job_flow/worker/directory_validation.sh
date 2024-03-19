@@ -49,24 +49,6 @@ fi
 directories=$(sudo docker exec "$CONTAINER_NAME_WORKER" ls -t $test_dir)
 log_dir="$test_dir/$(echo "$directories" | head -n 1)"
 
-# expected_content_array=("access_log" "_condor_stderr" "_condor_stdout" "condor_exec.exe")
-
-# id=$((id + 1))
-# name="Worker condor log dir files existence check"
-# level="Critical"
-# description="Worker condor log dir should contain $(convert_array_to_string "${expected_content_array[@]}")"
-
-# fail=false
-# for file in "${expected_content_array[@]}"; do
-#     if ! sudo docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$file" ]; then
-#         print_full_test "$id" "$name" "FAILED" "$description" "$level" "File '$file' does not exist in '$log_dir'"
-#         fail=true
-#     fi
-# done
-# if ! $fail; then
-#     print_full_test "$id" "$name" "PASSED" "$description" "$level" "All expected files exist in '$log_dir'"
-# fi
-
 function validate_access_log() {
     local log_file="access_log"
     id=$((id + 1))
