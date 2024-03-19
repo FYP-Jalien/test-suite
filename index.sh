@@ -6,6 +6,8 @@ source .env
 
 id=0
 
+print_test_header
+
 source common/index.sh
 source central/index.sh
 source schedd/index.sh
