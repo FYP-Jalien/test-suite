@@ -360,25 +360,6 @@ if [ ${#matching_files[@]} -gt 0 ]; then
             fi
         }
 
-        function validate_xrdcp() {
-            local variable="XRDCP_ERRORS"
-            local variable_value
-            variable_value=$(echo "$startup_script_content" | grep "^export $variable=" | sed "s/^export $variable=\"\(.*\)\";/\1/")
-            # shellcheck disable=SC2016
-            local pattern='^export XRDCP_ERRORS=\$(.*)s*$'
-            id=$((id + 1))
-            name="Agent Startup Script $variable Check"
-            level="Critical"
-            description="Agent Startup Script $variable must be set to a command"
-            if [ -z "$variable_value" ]; then
-                print_full_test "$id" "$name" "FAILED" "$description" "$level" "Agent start up scripts do not contain 'export $variable' line."
-            elif [[ "$variable_value" =~ $pattern ]]; then
-                print_full_test "$id" "$name" "PASSED" "$description" "$level" "Agent Start up Script $variable is valid."
-            else
-                print_full_test "$id" "$name" "FAILED" "$description" "$level" "Agent Start up Script $variable is invalid or in invalid format."
-            fi
-        }
-
         function validate_jobagent_cmd() {
             local variable="JALIEN_JOBAGENT_CMD"
             local variable_value
@@ -428,7 +409,6 @@ if [ ${#matching_files[@]} -gt 0 ]; then
         validate_ttl
         validate_apmon_config
         validate_partition
-        validate_xrdcp
         validate_jobagent_cmd
         validate_eval
     fi

@@ -20,7 +20,7 @@ source schedd/index.sh
 source se/index.sh
 source ce/index.sh
 source worker/index.sh
-# source job_flow/index.sh
+source job_flow/index.sh
 
 critical_success=$((critical_count - critical_fail))
 warning_success=$((warning_count - warning_fail))
