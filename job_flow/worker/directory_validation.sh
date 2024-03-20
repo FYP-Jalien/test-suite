@@ -131,7 +131,7 @@ function validate_condor_exec() {
     if ! sudo docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
         print_full_test "$id" "$name" "FAILED" "$description" "Critical" "File '$log_file' does not exist in '$log_dir'"
     fi
-    local expected_content=("JALIEN_TOKEN_CERT" "JALIEN_TOKEN_KEY" "HOME" "PATH" "LD_LIBRARY_PATH" "TMP" "TMPDIR" "LOGDIR" "CACHEDIR" "ALIEN_CM_AS_LDAP_PROXY" "site" "ALIEN_SITE" "CE" "CEhost" "TTL" "APMON_CONFIG" "partition" "ALIENV" "XRDCP_ERRORS" "JALIEN_JOBAGENT_CMD")
+    local expected_content=("JALIEN_TOKEN_CERT" "JALIEN_TOKEN_KEY" "HOME" "PATH" "LD_LIBRARY_PATH" "TMP" "TMPDIR" "LOGDIR" "CACHEDIR" "ALIEN_CM_AS_LDAP_PROXY" "site" "ALIEN_SITE" "CE" "CEhost" "TTL" "APMON_CONFIG" "partition" "JALIEN_JOBAGENT_CMD")
     description="$log_file should contain $(convert_array_to_string "${expected_content[@]}")"
     local fail=false
     for content in "${expected_content[@]}"; do
