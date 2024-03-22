@@ -20,8 +20,17 @@ The JAliEn Replica project focuses on providing a simplified environment for tes
 - **main**: The main branch houses stable changes that have been thoroughly tested.
 
 ## When Changing the test files
+
 - If you adding new files or removing a test file, please update the `run_all_test.sh` file inside the directory.
 
 ## How to run the tests
+
 - Create a `.env` file using the `.env.example` file as a template.
 - Run the `sudo test.sh` file in the root directory.
+
+## Criticality Levels
+
+- Each Test has an assigned level which denotes its criticality.
+1. Critical - Failing of these tests will cause the test suite to exit with 1
+2. Warning - Failing will these give a warning however, test run will proceed
+3. Minor - Failing will give an output message, no warning or exectuion stop.
