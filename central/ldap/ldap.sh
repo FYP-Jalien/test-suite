@@ -367,7 +367,7 @@ function check_firstse_SE_services_JTestSite_sites_localhost_localdomain() {
     ldap_filter=$(generate_ldap_filter "${#keys[@]}" "${keys[@]}" "${values[@]}")
     count=$(ldap_search_count "$base_dn" "$ldap_filter")
     id=$((id + 1))
-    name="LDAP firstse, SE, Services, JTestSite, Sites, localhost.localdomain Check"
+    name="LDAP firstse, Services, JTestSite, Sites, localhost.localdomain Check"
     level="Warning"
     description="LDAP should have $base_dn, with objectClass: top and all the required attributes."
     if [ -n "$count" ] && [ "$count" -ne 0 ]; then
@@ -384,7 +384,7 @@ function check_firstce_CE_services_JTestSite_sites_localhost_localdomain() {
     ldap_filter=$(generate_ldap_filter "${#keys[@]}" "${keys[@]}" "${values[@]}")
     count=$(ldap_search_count "$base_dn" "$ldap_filter")
     id=$((id + 1))
-    name="LDAP firstce, CE, Services, JTestSite, Sites, localhost.localdomain Check"
+    name="LDAP firstce, Services, JTestSite, Sites, localhost.localdomain Check"
     level="Warning"
     description="LDAP should have $base_dn, with objectClass: top and all the required attributes."
     if [ -n "$count" ] && [ "$count" -ne 0 ]; then
@@ -401,7 +401,7 @@ function check_localhost_localdomain_config_JTestSite_sites_localhost_localdomai
     ldap_filter=$(generate_ldap_filter "${#keys[@]}" "${keys[@]}" "${values[@]}")
     count=$(ldap_search_count "$base_dn" "$ldap_filter")
     id=$((id + 1))
-    name="LDAP localhost.localdomain, Config, JTestSite, Sites, localhost, localdomain Check"
+    name="LDAP localhost.localdomain, Config, JTestSite, Sites Check"
     level="Warning"
     description="LDAP should have $base_dn, with objectClass: top and all the required attributes."
     if [ -n "$count" ] && [ "$count" -ne 0 ]; then
