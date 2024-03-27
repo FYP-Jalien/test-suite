@@ -76,6 +76,7 @@ function print_full_test() {
         if [[ "$test_level" == "Critical" ]]; then
             critical_fail=$((critical_fail + 1))
             print_error "$test_id" "$test_name" "$test_status" "$test_level" "$test_message" "$test_description"
+            print_test_summary
             exit 1
         elif [[ "$test_level" == "Warning" ]]; then
             warning_fail=$((warning_fail + 1))
@@ -90,6 +91,9 @@ function print_full_test() {
 }
 
 function print_test_summary() {
+    critical_success=$((critical_count - critical_fail))
+warning_success=$((warning_count - warning_fail))
+minor_success=$((minor_count - minor_fail))
     echo -e "Test Summary:"
     echo -e "-----------------------------"
     echo -e "Critical: ${error_color}$critical_count${reset_color} (${error_color}$critical_fail Failed${reset_color}, ${success_color}$critical_success Passed${reset_color})"

@@ -14,18 +14,14 @@ minor_fail=0
 
 print_test_header
 
-source common/index.sh
-source central/index.sh
-source schedd/index.sh
-source se/index.sh
-source ce/index.sh
-source worker/index.sh
-source job_flow/index.sh
-source job_flow_logs/index.sh
+# source common/index.sh
+# source central/index.sh
+# source schedd/index.sh
+# source se/index.sh
+# source ce/index.sh
+# source worker/index.sh
+# source job_flow/index.sh
+# source job_flow_logs/index.sh
 source advanced_logs/index.sh
-
-critical_success=$((critical_count - critical_fail))
-warning_success=$((warning_count - warning_fail))
-minor_success=$((minor_count - minor_fail))
 
 print_test_summary
