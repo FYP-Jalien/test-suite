@@ -6,3 +6,4 @@ index_file_name="ce"
 
 source $index_file_name/container_validation.sh
 source $index_file_name/condor_validation.sh
+source $index_file_name/ja_custom_validation.sh

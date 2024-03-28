@@ -392,6 +392,18 @@ if [ ${#matching_files[@]} -gt 0 ]; then
             fi
         }
 
+        function validate_customization(){
+            id=$((id + 1))
+            name="Agent Startup Script Customization Check"
+            level="Critical"
+            description="Agent Startup Script must be customized to set custome variabes."
+            if echo "$startup_script_content" | grep -q "# customization [0-9] start" && echo "$startup_script_content" | grep -q "# customization [0-9] end"; then
+                print_full_test "$id" "$name" "PASSED" "$description" "$level" "Agent Start up Script is customized."
+            else
+                print_full_test "$id" "$name" "FAILED" "$description" "$level" "Agent Start up Script is not customized."
+            fi
+        }
+
         validate_jalien_token_cert
         validate_jalien_token_key
         validate_home
@@ -411,6 +423,7 @@ if [ ${#matching_files[@]} -gt 0 ]; then
         validate_partition
         validate_jobagent_cmd
         validate_eval
+        validate_customization
     fi
 
 else
