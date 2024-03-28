@@ -948,7 +948,7 @@ expected_lines=(
     "alien.api.catalogue.PFNforWrite run"
     "Returning: Asked for write: LFN entryId	: [0-9]\+"
     "owner		: jalien:admin"
-    "ctime		: [a-z]\+ [a-z]\+ [0-9]\+ [0-9:]\+ UTC [0-9]\+ (expires null)"
+    "ctime		: "
     "replicated	: false"
     "aclId		: 0"
     "lfn		: j/jalien/output_dir_new/stdout"

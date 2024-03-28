@@ -53,7 +53,7 @@ else
     print_full_test "$id" "$name" $status "$description" $level "$message"
 fi
 
-expected_command="[bash /ce-setup/ce-entrypint.sh]"
+expected_command="[bash /ce-setup/ce-entrypoint.sh]"
 id=$((id + 1))
 name="CE Container Command Check"
 description="CE container should be running with command $expected_command"
