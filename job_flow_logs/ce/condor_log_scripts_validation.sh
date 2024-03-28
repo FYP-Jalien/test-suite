@@ -94,7 +94,7 @@ else
     name="CE condor out scripts content check"
     level="Minor"
     description="condor out scripts may contain \'Connecting to JCentral on JCentral-dev:8098\' "
-    if ! echo "$out_script_content" | grep -q "Connecting to JCentral on JCentral-dev:8098"; then
+    if ! echo "$out_script_content" | grep -q "Connecting to JCentral on JCentral\-dev:8098"; then
         print_full_test "$id" "$name" "FAILED" "$description" "$level" "No \'Connecting to JCentral on JCentral-dev:8098\' found in $latest_out_file."
     else
         print_full_test "$id" "$name" "PASSED" "$description" "$level" "Found \'Connecting to JCentral on JCentral-dev:8098\' in $latest_out_file."

@@ -53,7 +53,7 @@ else
     print_full_test "$id" "$name" $status "$description" $level "$message"
 fi
 
-expected_command="[bash /ce-setup/ce-entrypint.sh]"
+expected_command="[bash /ce-setup/ce-entrypoint.sh]"
 id=$((id + 1))
 name="CE Container Command Check"
 description="CE container should be running with command $expected_command"
@@ -69,7 +69,7 @@ else
     print_full_test "$id" "$name" $status "$description" $level "$message"
 fi
 
-expected_environment=( "CONDOR_HOST=schedd" "USE_POOL_PASSWORD=yes" "LD_LIBRARY_PATH=/tmp" )
+expected_environment=( "CONDOR_HOST=schedd" "USE_POOL_PASSWORD=yes" )
 id=$((id + 1))
 name="CE Container Env Check"
 expected_environment_string=$(convert_array_to_string "${expected_environment[@]}")

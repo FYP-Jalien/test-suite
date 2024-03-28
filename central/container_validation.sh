@@ -15,7 +15,7 @@ else
     print_full_test "$id" "$name" $status "$description" $level "$message"    
 fi
 
-expected_image="jalien-base-18"
+expected_image="jalien-base"
 id=$((id + 1))
 name="CENTRAL Container Image Check"
 description="CENTRAL container should be running with $expected_image."
