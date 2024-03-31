@@ -13,7 +13,7 @@ if sudo docker exec "$CONTAINER_NAME_CE" [ ! -d "$condor_directory" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Directory $directory does not exist."
 fi
 
-today=$(date +"%Y-%m-%d")
+today=$(date -u -d "+1 hours" +"%Y-%m-%d")
 directory="$condor_directory/$today"
 
 if sudo docker exec "$CONTAINER_NAME_CE" [ ! -d "$directory" ]; then
@@ -92,14 +92,31 @@ else
     out_script_content=$(sudo docker exec "$CONTAINER_NAME_CE" cat "$latest_log_file")
     id=$((id + 1))
     name="CE condor out scripts content check"
-    level="Minor"
-    description="condor out scripts may contain \'Connecting to JCentral on JCentral-dev:8098\' "
-    if ! echo "$out_script_content" | grep -q "Connecting to JCentral on JCentral\-dev:8098"; then
-        print_full_test "$id" "$name" "FAILED" "$description" "$level" "No \'Connecting to JCentral on JCentral-dev:8098\' found in $latest_out_file."
-    else
-        print_full_test "$id" "$name" "PASSED" "$description" "$level" "Found \'Connecting to JCentral on JCentral-dev:8098\' in $latest_out_file."
+    level="Warning"
+    description="condor out scripts should contain the expected content "
+    expeced_lines=(
+        "Job submitted from host"
+        "Started transferring input files"
+        "Finished transferring input files"
+        "Job executing on host"
+        "Image size of job updated: [0-9]\+"
+        "[0-9]\+  -  MemoryUsage of job (MB)"
+        "[0-9]\+  -  ResidentSetSize of job (KB)"
+        "Started transferring output files"
+        "Finished transferring output files"
+        "Job terminated."
+        "Job terminated of its own accord at [0-9TZ:-]\+ with exit-code 0."
+    )
+    all_found=true
+    for line in "${expeced_lines[@]}"; do
+        if ! echo "$out_script_content" | grep -q "$line"; then
+            print_full_test "$id" "$name" "FAILED" "$description" "$level" "No \'$line\' found in $latest_out_file."
+            all_found=false
+        fi
+    done
+    if $all_found; then
+        print_full_test "$id" "$name" "PASSED" "$description" "$level" "Found all expected contents in $latest_out_file."
     fi
-
 fi
 
 pattern="jobagent\_[0-9]+_[0-9]+\.err"

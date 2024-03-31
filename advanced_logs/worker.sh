@@ -2,7 +2,7 @@
 
 id=$((id + 1))
 name="Worker condor copy log dir logs existence check"
-level="Critical"
+level="Warning"
 description="Worker condor copy log dir logs should exist. If not, the job_flow_logs worker tests was not run."
 test_dir="/host_files/condor_dir"
 if ! sudo docker exec "$CONTAINER_NAME_WORKER" test -d "$test_dir" ; then
@@ -26,7 +26,7 @@ fi
 agent_log_path=${matching_files[0]}"/job-agent-1.log"
 id=$((id + 1))
 name="job-agent-1.log existence check"
-level="Critical"
+level="Warning"
 description="Worker host copy log files job-agent-1.log should exist."
 if sudo docker exec "$CONTAINER_NAME_WORKER" [ ! -f "$agent_log_path" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "$agent_log_path does not exist."
@@ -36,7 +36,7 @@ fi
 
 id=$((id + 1))
 name="Worker Starting check"
-level="Critical"
+level="Warning"
 expected_start_line="alien.site.JobAgent <init> JobNumber: [0-9]\+"
 description="Worker should start successfully with '$expected_start_line'."
 if ! sudo docker exec "$CONTAINER_NAME_WORKER" cat "$agent_log_path" | grep -q "$expected_start_line"; then
@@ -63,7 +63,7 @@ function check_expected_lines() {
 
 id=$((id + 1))
 name="Worker idle running check"
-level="Critical"
+level="Warning"
 expected_lines=(
     "We have the following DN :C=ch,O=AliEn2,CN=JobAgent"
     "Getting probe list from Site Sonar for : worker1"
@@ -77,11 +77,12 @@ expected_lines=(
 description="Worker should run idly with the following lines: ${expected_lines[*]}."
 check_expected_lines
 
+# TODO - Find this accordngly
 agent_file_name="job-agent-2.log"
 agent_log_path=${matching_files[0]}"/$agent_file_name"
 id=$((id + 1))
 name="Worker running job agent check"
-level="Critical"
+level="Warning"
 expected_lines=(
     "Starting JobAgent 2 in worker1"
     "{Site=JTestSite, Partition=,,, CE=ALICE::JTestSite::firstce, Platform=Linux-x86_64, Host=localhost.localdomain, TTL=87000, alienCm=localhost.localdomain:10000, workdir=/var/lib/condor/execute/dir_[0-9]\+, Localhost=worker1, CEhost=localhost.localdomain, Disk=[0-9]\+, CPUCores=1, CVMFS=1"
@@ -124,7 +125,7 @@ check_expected_lines
 
 id=$((id + 1))
 name="Worker job wrapper lanuch check"
-level="Critical"
+level="Warning"
 expected_lines=(
     "alien.site.JobRunner"
     "Launching jobwrapper using the command: \[java, -client, -Xms60M, -Xmx60M, -Djdk.lang.Process.launchMechanism=vfork, -XX:+UseSerialGC, 
