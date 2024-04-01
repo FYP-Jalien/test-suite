@@ -26,11 +26,33 @@ The JAliEn Replica project focuses on providing a simplified environment for tes
 ## How to run the tests
 
 - Create a `.env` file using the `.env.example` file as a template.
-- Run the `sudo test.sh` file in the root directory.
+- Run the `sudo index.sh` file in the root directory.
+
+### Running the test with optional command-line argumanets
+In default, running `sudo index.sh` will run all the available tests. If need to run a segment of tests can use followin arguments
+
+- --host-only: Execute only the host specific tests
+- --container-only: Execute the host specfic tests and container specifci tests only
+- --flow-only: Execute all tests except the advanced logs tests
+
+#### Examples
+
+````bash
+# Run only the host specific tests
+./index.sh --host-only
+
+# Run host specific tests and container specific test only
+./index.sh --container-only
+
+# Run all tests excepts advanced logs tests
+./index.sh --flow-only
+````
+
 
 ## Criticality Levels
 
 - Each Test has an assigned level which denotes its criticality.
+  
 1. Critical - Failing of these tests will cause the test suite to exit with 1
 2. Warning - Failing will these give a warning however, test run will proceed
 3. Minor - Failing will give an output message, no warning or exectuion stop.
