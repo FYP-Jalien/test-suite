@@ -28,11 +28,11 @@ user = $user
 password = $password"
 
 function mysql_command() {
-    sudo docker exec "$CONTAINER_NAME_CENTRAL" /bin/bash -c "mysql --defaults-extra-file=$my_cnf --execute \"$1\""
+    docker exec "$CONTAINER_NAME_CENTRAL" /bin/bash -c "mysql --defaults-extra-file=$my_cnf --execute \"$1\""
 }
 
 function mysql_command_return() {
-    result=$(sudo docker exec "$CONTAINER_NAME_CENTRAL" /bin/bash -c "mysql --defaults-extra-file=$my_cnf  --execute \"$1\"")
+    result=$(docker exec "$CONTAINER_NAME_CENTRAL" /bin/bash -c "mysql --defaults-extra-file=$my_cnf  --execute \"$1\"")
     echo "$result"
 
 }
@@ -362,8 +362,8 @@ function check_optimizer() {
     print_full_test "$id" "$name" "PASSED" "Optimiser operations are complete." "$level" "Optimiser operations are complete."
 }
 
-sudo docker exec "$CONTAINER_NAME_CENTRAL" /bin/bash -c "mkdir -p $sql_home"
-sudo docker exec "$CONTAINER_NAME_CENTRAL" /bin/bash -c "echo -e '$my_cnf_content' >'$my_cnf'"
+docker exec "$CONTAINER_NAME_CENTRAL" /bin/bash -c "mkdir -p $sql_home"
+docker exec "$CONTAINER_NAME_CENTRAL" /bin/bash -c "echo -e '$my_cnf_content' >'$my_cnf'"
 
 execution_error_message="MySQL execution failed."
 
@@ -410,4 +410,4 @@ check_add_status
 
 check_optimizer
 
-sudo docker exec "$CONTAINER_NAME_CENTRAL" /bin/bash -c "rm -r $sql_home"
+docker exec "$CONTAINER_NAME_CENTRAL" /bin/bash -c "rm -r $sql_home"

@@ -9,14 +9,14 @@ name="CE condor log scripts existence check"
 level="Critical"
 description="condor log scripts will be created when the job agent start up script is submitted to htcondor. "
 
-if sudo docker exec "$CONTAINER_NAME_CE" [ ! -d "$condor_directory" ]; then
+if docker exec "$CONTAINER_NAME_CE" [ ! -d "$condor_directory" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Directory $directory does not exist."
 fi
 
 today=$(date -u -d "+1 hours" +"%Y-%m-%d")
 directory="$condor_directory/$today"
 
-if sudo docker exec "$CONTAINER_NAME_CE" [ ! -d "$directory" ]; then
+if docker exec "$CONTAINER_NAME_CE" [ ! -d "$directory" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Directory $directory does not exist."
 fi
 
@@ -24,7 +24,7 @@ while IFS= read -r -d '' file; do
     if [[ "$file" =~ $pattern ]]; then
         matching_files+=("$file")
     fi
-done < <(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "jobagent_[0-9]*_[0-9]*.log" -print0)
+done < <(docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "jobagent_[0-9]*_[0-9]*.log" -print0)
 
 if [ ${#matching_files[@]} -eq 0 ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "No condor log scripts found in $directory."
@@ -32,7 +32,7 @@ else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "Found ${#matching_files[@]} condor log scripts in $directory."
 fi
 
-if ! latest_log_file=$(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "jobagent_[0-9]*_[0-9]*.log" -printf "%T@ %p\n" | sort -n | tail -n 1 | cut -d ' ' -f 2-); then
+if ! latest_log_file=$(docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "jobagent_[0-9]*_[0-9]*.log" -printf "%T@ %p\n" | sort -n | tail -n 1 | cut -d ' ' -f 2-); then
     id=$((id + 1))
     name="Latest log Script Existence Check"
     level="Critical"
@@ -40,7 +40,7 @@ if ! latest_log_file=$(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Latest log could not be found"
 fi
 
-log_script_content=$(sudo docker exec "$CONTAINER_NAME_CE" cat "$latest_log_file")
+log_script_content=$(docker exec "$CONTAINER_NAME_CE" cat "$latest_log_file")
 
 id=$((id + 1))
 name="CE condor log scripts content check"
@@ -75,13 +75,13 @@ while IFS= read -r -d '' file; do
     if [[ "$file" =~ $pattern ]]; then
         matching_files+=("$file")
     fi
-done < <(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "jobagent_[0-9]*_[0-9]*.out" -print0)
+done < <(docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "jobagent_[0-9]*_[0-9]*.out" -print0)
 
 if [ ${#matching_files[@]} -eq 0 ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "No condor out scripts found in $directory."
 else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "Found ${#matching_files[@]} condor out scripts in $directory."
-    if ! latest_out_file=$(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "jobagent_[0-9]*_[0-9]*.out" -printf "%T@ %p\n" | sort -n | tail -n 1 | cut -d ' ' -f 2-); then
+    if ! latest_out_file=$(docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "jobagent_[0-9]*_[0-9]*.out" -printf "%T@ %p\n" | sort -n | tail -n 1 | cut -d ' ' -f 2-); then
         id=$((id + 1))
         name="Latest out Script Existence Check"
         level="Warning"
@@ -89,7 +89,7 @@ else
         print_full_test "$id" "$name" "FAILED" "$description" "$level" "Latest out could not be found"
     fi
 
-    out_script_content=$(sudo docker exec "$CONTAINER_NAME_CE" cat "$latest_log_file")
+    out_script_content=$(docker exec "$CONTAINER_NAME_CE" cat "$latest_log_file")
     id=$((id + 1))
     name="CE condor out scripts content check"
     level="Warning"
@@ -130,7 +130,7 @@ while IFS= read -r -d '' file; do
     if [[ "$file" =~ $pattern ]]; then
         matching_files+=("$file")
     fi
-done < <(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "jobagent_[0-9]*_[0-9]*.err" -print0)
+done < <(docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "jobagent_[0-9]*_[0-9]*.err" -print0)
 
 if [ ${#matching_files[@]} -eq 0 ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "No condor err scripts found in $directory."

@@ -17,7 +17,7 @@ generate_ldap_filter() {
 }
 
 function ldap_search_count() {
-    sudo docker exec "$CONTAINER_NAME_CENTRAL" /bin/bash -c "ldapsearch -x -b \"$1\" -s base \"$2\" -H ldap://localhost:$ldap_port | grep \"numEntries\" |  awk '{print 3}'"
+    docker exec "$CONTAINER_NAME_CENTRAL" /bin/bash -c "ldapsearch -x -b \"$1\" -s base \"$2\" -H ldap://localhost:$ldap_port | grep \"numEntries\" |  awk '{print 3}'"
 
 }
 

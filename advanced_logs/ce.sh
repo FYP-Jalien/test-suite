@@ -7,7 +7,7 @@ id=$((id + 1))
 name="CE.log.0 existence check"
 level="Critical"
 description="Computing Environment log file CE.log.0 should exist."
-if sudo docker exec "$CONTAINER_NAME_CE" [ ! -f "$ce_log_path" ]; then
+if docker exec "$CONTAINER_NAME_CE" [ ! -f "$ce_log_path" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "$ce_log_path does not exist."
 else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "$ce_log_path exists."
@@ -18,7 +18,7 @@ id=$((id + 1))
 name="CE.pid existence check"
 level="Critical"
 description="Computing Environment pid file CE.pid should exist."
-if sudo docker exec "$CONTAINER_NAME_CE" [ ! -f "$ce_pid_path" ]; then
+if docker exec "$CONTAINER_NAME_CE" [ ! -f "$ce_pid_path" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "$ce_pid_path does not exist."
 else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "$ce_pid_path exists."
@@ -29,7 +29,7 @@ name="Computing Element Starting check"
 level="Critical"
 expected_start_line="Starting ComputingElement in localhost.localdomain"
 description="Computing Element should start successfully with '$expected_start_line'."
-if ! sudo docker exec "$CONTAINER_NAME_CE" cat "$ce_log_path" | grep -q "$expected_start_line"; then
+if ! docker exec "$CONTAINER_NAME_CE" cat "$ce_log_path" | grep -q "$expected_start_line"; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Computing Element did not start successfully."
 
 else
@@ -39,7 +39,7 @@ fi
 function check_expected_lines() {
     local allFound=true
     for expected_line in "${expected_lines[@]}"; do
-        if ! sudo docker exec "$CONTAINER_NAME_CE" cat "$ce_log_path" | grep -q "$expected_line"; then
+        if ! docker exec "$CONTAINER_NAME_CE" cat "$ce_log_path" | grep -q "$expected_line"; then
             allFound=false
             print_full_test "$id" "$name" "FAILED" "$description" "$level" "Expected line $expected_line not found CE.log.0"
         fi

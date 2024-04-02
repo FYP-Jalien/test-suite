@@ -7,7 +7,7 @@ id=$((id + 1))
 name="Worker $condor_execute_directory existence check"
 level="Critical"
 description="$condor_execute_directory should be created when condor started and procedding."
-if sudo docker exec "$CONTAINER_NAME_CE" [ ! -d "$condor_execute_directory" ]; then
+if docker exec "$CONTAINER_NAME_CE" [ ! -d "$condor_execute_directory" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Directory $condor_execute_directory does not exist."
 else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "Directory $condor_execute_directory exists."
@@ -20,7 +20,7 @@ description="Worker condor log should be created when jobagnet script is started
 max_iterations=5
 cur_iteration=0
 test_dir="/host_files/condor_dir"
-sudo docker exec "$CONTAINER_NAME_WORKER" mkdir -p "$test_dir"
+docker exec "$CONTAINER_NAME_WORKER" mkdir -p "$test_dir"
 pattern="dir_[0-9]+"
 while [ $cur_iteration -lt $max_iterations ]; do
     matching_files=()
@@ -28,12 +28,12 @@ while [ $cur_iteration -lt $max_iterations ]; do
         if [[ "$dir" =~ $pattern ]]; then
             matching_files+=("$dir")
         fi
-    done < <(sudo docker exec "$CONTAINER_NAME_WORKER" find "$condor_execute_directory" -type d -name "dir_[0-9]*" -print0)
+    done < <(docker exec "$CONTAINER_NAME_WORKER" find "$condor_execute_directory" -type d -name "dir_[0-9]*" -print0)
     if [ ${#matching_files[@]} -eq 0 ]; then
         sleep 10
     else
         dir="${matching_files[0]}"
-        if sudo docker exec "$CONTAINER_NAME_WORKER" cp -r "$dir" "$test_dir"; then
+        if docker exec "$CONTAINER_NAME_WORKER" cp -r "$dir" "$test_dir"; then
             break
         fi
     fi
@@ -46,7 +46,7 @@ else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "Found ${#matching_files[@]} condor log scripts in $condor_execute_directory."
 fi
 
-directories=$(sudo docker exec "$CONTAINER_NAME_WORKER" ls -t $test_dir)
+directories=$(docker exec "$CONTAINER_NAME_WORKER" ls -t $test_dir)
 log_dir="$test_dir/$(echo "$directories" | head -n 1)"
 
 function validate_access_log() {
@@ -54,14 +54,14 @@ function validate_access_log() {
     id=$((id + 1))
     name="Worker condor logs access_log content check"
     level="Warning"
-    if ! sudo docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
+    if ! docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
         print_full_test "$id" "$name" "FAILED" "$description" "Critical" "File '$log_file' does not exist in '$log_dir'"
     fi
     local expected_content=("\"user\":\"jobagent\"" "\"role\":\"jobagent\"" "\"command\":\"boot\"")
     description="access_log should contain $(convert_array_to_string "${expected_content[@]}")"
     local fail=false
     for content in "${expected_content[@]}"; do
-        if ! sudo docker exec "$CONTAINER_NAME_WORKER" grep -q "$content" "$log_dir/access_log"; then
+        if ! docker exec "$CONTAINER_NAME_WORKER" grep -q "$content" "$log_dir/access_log"; then
             print_full_test "$id" "$name" "FAILED" "$description" "$level" "No '$content' found in access_log"
             false=true
         fi
@@ -76,14 +76,14 @@ function validate_condor_stdout() {
     id=$((id + 1))
     name="Worker condor logs $log_file content check"
     level="Warning"
-    if ! sudo docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
+    if ! docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
         print_full_test "$id" "$name" "FAILED" "$description" "Critical" "File '$log_file' does not exist in '$log_dir'"
     fi
     local expected_content=("Connecting to JCentral on JCentral-dev:8098")
     description="$log_file should contain $(convert_array_to_string "${expected_content[@]}")"
     local fail=false
     for content in "${expected_content[@]}"; do
-        if ! sudo docker exec "$CONTAINER_NAME_WORKER" grep -q "$content" "$log_dir/$log_file"; then
+        if ! docker exec "$CONTAINER_NAME_WORKER" grep -q "$content" "$log_dir/$log_file"; then
             print_full_test "$id" "$name" "FAILED" "$description" "$level" "No '$content' found in $log_file"
             false=true
         fi
@@ -98,7 +98,7 @@ function validate_condor_stderr() {
     id=$((id + 1))
     name="Worker condor logs $log_file content check"
     level="Warning"
-    if ! sudo docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
+    if ! docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
         print_full_test "$id" "$name" "FAILED" "$description" "Critical" "File '$log_file' does not exist in '$log_dir'"
     else
         print_full_test "$id" "$name" "PASSED" "$description" "$level" "$log_file exists in $log_dir"
@@ -110,14 +110,14 @@ function validate_condor_exec() {
     id=$((id + 1))
     name="Worker condor logs $log_file content check"
     level="Warning"
-    if ! sudo docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
+    if ! docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
         print_full_test "$id" "$name" "FAILED" "$description" "Critical" "File '$log_file' does not exist in '$log_dir'"
     fi
     local expected_content=("JALIEN_TOKEN_CERT" "JALIEN_TOKEN_KEY" "HOME" "PATH" "LD_LIBRARY_PATH" "TMP" "TMPDIR" "LOGDIR" "CACHEDIR" "ALIEN_CM_AS_LDAP_PROXY" "site" "ALIEN_SITE" "CE" "CEhost" "TTL" "APMON_CONFIG" "partition" "JALIEN_JOBAGENT_CMD")
     description="$log_file should contain $(convert_array_to_string "${expected_content[@]}")"
     local fail=false
     for content in "${expected_content[@]}"; do
-        if ! sudo docker exec "$CONTAINER_NAME_WORKER" grep -q "export $content=" "$log_dir/$log_file"; then
+        if ! docker exec "$CONTAINER_NAME_WORKER" grep -q "export $content=" "$log_dir/$log_file"; then
             print_full_test "$id" "$name" "FAILED" "$description" "$level" "No '$content' found in $log_file"
             false=true
         fi
@@ -132,7 +132,7 @@ function validate_job_agent() {
     id=$((id + 1))
     name="Worker condor logs $log_file content check"
     level="Warning"
-    if ! sudo docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
+    if ! docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
         print_full_test "$id" "$name" "FAILED" "$description" "$level" "File '$log_file' does not exist in '$log_dir'"
     else
         print_full_test "$id" "$name" "PASSED" "$description" "$level" "$log_file exists in $log_dir"
@@ -144,7 +144,7 @@ function validate_job_agent_lck() {
     id=$((id + 1))
     name="Worker condor logs $log_file content check"
     level="Warning"
-    if ! sudo docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
+    if ! docker exec "$CONTAINER_NAME_WORKER" [ ! -d "$log_dir/$log_file" ]; then
         print_full_test "$id" "$name" "FAILED" "$description" "$level" "File '$log_file' does not exist in '$log_dir'"
     else
         print_full_test "$id" "$name" "PASSED" "$description" "$level" "$log_file exists in $log_dir"

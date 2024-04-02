@@ -11,7 +11,7 @@ directory_paths=("/jalien-dev" "/jalien-setup" "/root/.alien/testVO" "/root/.glo
 description="Central container should have these directories: $(convert_array_to_string "${directory_paths[@]}")."
 status="PASSED"
 for directory_path in "${directory_paths[@]}"; do
-    if ! sudo docker exec "$CONTAINER_NAME_CENTRAL" [ -e "$directory_path" ]; then
+    if ! docker exec "$CONTAINER_NAME_CENTRAL" [ -e "$directory_path" ]; then
         status="FAILED"
         message="Directory $directory_path does not exist in the container $CONTAINER_NAME_CENTRAL."
         print_full_test "$id" "$name" "$status" "$description" "$level" "$message"
@@ -29,7 +29,7 @@ file_paths=("$LOGS/setup_log.txt" "/root/.globus/alien.p12" "/docker-setup.sh")
 description="Central container should have these files: $(convert_array_to_string "${file_paths[@]}")."
 status="PASSED"
 for file_path in "${file_paths[@]}"; do
-    if ! sudo docker exec "$CONTAINER_NAME_CENTRAL" [ -e "$file_path" ]; then
+    if ! docker exec "$CONTAINER_NAME_CENTRAL" [ -e "$file_path" ]; then
         status="FAILED"
         message="File $file_path does not exist in the container $CONTAINER_NAME_CENTRAL."
         print_full_test "$id" "$name" "$status" "$description" "$level" "$message"

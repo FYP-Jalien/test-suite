@@ -12,7 +12,7 @@ description="CENTRAL container must have these packages installed: $(convert_arr
 status="PASSED"
 level="Warning"
 for package_name in "${critical_packages[@]}"; do
-    if ! sudo docker exec "$CONTAINER_NAME_WORKER" yum list installed "$package_name" >/dev/null 2>&1; then
+    if ! docker exec "$CONTAINER_NAME_WORKER" yum list installed "$package_name" >/dev/null 2>&1; then
         status="FAILED"
         message="$package_name is not installed."
         print_full_test "$id" "$name" $status "$description" $level "$message"
@@ -36,7 +36,7 @@ description="CENTRAL container may have these packages installed: $(convert_arra
 
 status="PASSED"
 for package_name in "${warning_packages[@]}"; do
-    if ! sudo docker exec "$CONTAINER_NAME_WORKER" yum list installed "$package_name" >/dev/null 2>&1; then
+    if ! docker exec "$CONTAINER_NAME_WORKER" yum list installed "$package_name" >/dev/null 2>&1; then
         status="FAILED"
         message="$package_name is not installed."
         print_full_test "$id" "$name" $status "$description" $level "$message"

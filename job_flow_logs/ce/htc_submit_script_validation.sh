@@ -9,7 +9,7 @@ name="CE condor submit scripts existence check"
 level="Critical"
 description="condor submit scripts will be created when the job agent start up script is submitted to htcondor. "
 
-if sudo docker exec "$CONTAINER_NAME_CE" [ ! -d "$condor_directory" ]; then
+if docker exec "$CONTAINER_NAME_CE" [ ! -d "$condor_directory" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Directory $directory does not exist."
 fi
 
@@ -17,7 +17,7 @@ fi
 today=$(date -u -d "+1 hours" +"%Y-%m-%d")
 directory="$condor_directory/$today"
 
-if sudo docker exec "$CONTAINER_NAME_CE" [ ! -d "$directory" ]; then
+if docker exec "$CONTAINER_NAME_CE" [ ! -d "$directory" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Directory $directory does not exist."
 fi
 
@@ -25,7 +25,7 @@ while IFS= read -r -d '' file; do
     if [[ "$file" =~ $pattern ]]; then
         matching_files+=("$file")
     fi
-done < <(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "htc-submit\.[0-9]*\.jdl" -print0)
+done < <(docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "htc-submit\.[0-9]*\.jdl" -print0)
 
 if [ ${#matching_files[@]} -eq 0 ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "No condor submit scripts found in $directory."
@@ -33,7 +33,7 @@ else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "Found ${#matching_files[@]} condor submit scripts in $directory."
 fi
 
-if ! latest__htcfile=$(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "htc-submit\.[0-9]*\.jdl" -printf "%T@ %p\n" | sort -n | tail -n 1 | cut -d ' ' -f 2-); then
+if ! latest__htcfile=$(docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "htc-submit\.[0-9]*\.jdl" -printf "%T@ %p\n" | sort -n | tail -n 1 | cut -d ' ' -f 2-); then
     id=$((id + 1))
     name="Latest htc submit Script Existence Check"
     level="Critical"
@@ -41,7 +41,7 @@ if ! latest__htcfile=$(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Latest htc submit could not be found"
 fi
 
-submit_script_content=$(sudo docker exec "$CONTAINER_NAME_CE" cat "$latest__htcfile")
+submit_script_content=$(docker exec "$CONTAINER_NAME_CE" cat "$latest__htcfile")
 
 function validate_cmd() {
     local variable="cmd"

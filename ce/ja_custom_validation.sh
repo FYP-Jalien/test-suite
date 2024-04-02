@@ -5,13 +5,13 @@ id=$((id + 1))
 name="Custom Job Agent Script Check"
 level="Critical"
 description="Custom job agent script should be present."
-if sudo docker exec "$CONTAINER_NAME_CE" [ ! -f "$file" ]; then
+if docker exec "$CONTAINER_NAME_CE" [ ! -f "$file" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "File $file does not exist."
 else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "File $file exists."
 fi
 
-ja_cutom_content=$(sudo docker exec "$CONTAINER_NAME_CE" cat "$file")
+ja_cutom_content=$(docker exec "$CONTAINER_NAME_CE" cat "$file")
 
 id=$((id + 1))
 name="Custom Job Agent Script Content Check"

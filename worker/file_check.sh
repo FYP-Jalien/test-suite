@@ -7,7 +7,7 @@ file_paths=("/docker-setup.sh")
 description="Worker container should have these files: $(convert_array_to_string "${file_paths[@]}")."
 status="PASSED"
 for file_path in "${file_paths[@]}"; do
-    if ! sudo docker exec "$CONTAINER_NAME_WORKER" [ -e "$file_path" ]; then
+    if ! docker exec "$CONTAINER_NAME_WORKER" [ -e "$file_path" ]; then
         status="FAILED"
         message="File $file_path does not exist in the container $CONTAINER_NAME_WORKER."
         print_full_test "$id" "$name" "$status" "$description" "$level" "$message"
@@ -25,7 +25,7 @@ directory_paths=("/var/lib/condor/execute")
 description="Worker container should have these directories: $(convert_array_to_string "${directory_paths[@]}")."
 status="PASSED"
 for directory_path in "${directory_paths[@]}"; do
-    if ! sudo docker exec "$CONTAINER_NAME_WORKER" [ -e "$directory_path" ]; then
+    if ! docker exec "$CONTAINER_NAME_WORKER" [ -e "$directory_path" ]; then
         status="FAILED"
         message="Directory $directory_path does not exist in the container $CONTAINER_NAME_WORKER."
         print_full_test "$id" "$name" "$status" "$description" "$level" "$message"

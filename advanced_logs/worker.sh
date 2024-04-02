@@ -5,7 +5,7 @@ name="Worker condor copy log dir logs existence check"
 level="Warning"
 description="Worker condor copy log dir logs should exist. If not, the job_flow_logs worker tests was not run."
 test_dir="/host_files/condor_dir"
-if ! sudo docker exec "$CONTAINER_NAME_WORKER" test -d "$test_dir" ; then
+if ! docker exec "$CONTAINER_NAME_WORKER" test -d "$test_dir" ; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Directory $test_dir does not exist in $CONTAINER_NAME_WORKER."
 fi
 
@@ -15,7 +15,7 @@ while IFS= read -r -d '' dir; do
     if [[ "$dir" =~ $pattern ]]; then
         matching_files+=("$dir")
     fi
-done < <(sudo docker exec "$CONTAINER_NAME_WORKER" find   "$test_dir" -type d -name "dir_[0-9]*" -print0)
+done < <(docker exec "$CONTAINER_NAME_WORKER" find   "$test_dir" -type d -name "dir_[0-9]*" -print0)
 
 if [ ${#matching_files[@]} -eq 0 ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "No dir log scripts found in $test_dir."
@@ -28,7 +28,7 @@ id=$((id + 1))
 name="job-agent-1.log existence check"
 level="Warning"
 description="Worker host copy log files job-agent-1.log should exist."
-if sudo docker exec "$CONTAINER_NAME_WORKER" [ ! -f "$agent_log_path" ]; then
+if docker exec "$CONTAINER_NAME_WORKER" [ ! -f "$agent_log_path" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "$agent_log_path does not exist."
 else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "$agent_log_path exists."
@@ -39,7 +39,7 @@ name="Worker Starting check"
 level="Warning"
 expected_start_line="alien.site.JobAgent <init> JobNumber: [0-9]\+"
 description="Worker should start successfully with '$expected_start_line'."
-if ! sudo docker exec "$CONTAINER_NAME_WORKER" cat "$agent_log_path" | grep -q "$expected_start_line"; then
+if ! docker exec "$CONTAINER_NAME_WORKER" cat "$agent_log_path" | grep -q "$expected_start_line"; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Worker did not start successfully."
 else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "Worker started successfully."
@@ -51,7 +51,7 @@ expected_lines=()
 function check_expected_lines() {
     local allFound=true
     for expected_line in "${expected_lines[@]}"; do
-        if ! sudo docker exec "$CONTAINER_NAME_WORKER" cat "$agent_log_path" | grep -q "$expected_line"; then
+        if ! docker exec "$CONTAINER_NAME_WORKER" cat "$agent_log_path" | grep -q "$expected_line"; then
             allFound=false
             print_full_test "$id" "$name" "FAILED" "$description" "$level" "Expected line $expected_line not found in $agent_file_name"
         fi
