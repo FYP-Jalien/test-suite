@@ -9,7 +9,7 @@ name="Agent Startup Script existence check"
 level="Critical"
 description="Agent start up scripts should be created. If not make sure the optimiser is running. If the optimiser is just started wait for a few minutes and check again. If the issue persists, try restarting the optimiser."
 
-if sudo docker exec "$CONTAINER_NAME_CE" [ ! -d "$directory" ]; then
+if docker exec "$CONTAINER_NAME_CE" [ ! -d "$directory" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Directory $directory does not exist."
     exit 1
 fi
@@ -19,14 +19,14 @@ while IFS= read -r -d '' file; do
     if [[ "$file" =~ $pattern ]]; then
         matching_files+=("$file")
     fi
-done < <(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "agent.startup.*" -print0)
+done < <(docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "agent.startup.*" -print0)
 
 # Check if any matching file is found
 if [ ${#matching_files[@]} -gt 0 ]; then
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "Agent start up scripts found."
-    latest_file=$(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "agent.startup.*" -printf "%T@ %p\n" | sort -n | tail -n 1 | cut -d ' ' -f 2-)
+    latest_file=$(docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "agent.startup.*" -printf "%T@ %p\n" | sort -n | tail -n 1 | cut -d ' ' -f 2-)
 
-    if ! latest_file=$(sudo docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "agent.startup.*" -printf "%T@ %p\n" | sort -n | tail -n 1 | cut -d ' ' -f 2-); then
+    if ! latest_file=$(docker exec "$CONTAINER_NAME_CE" find "$directory" -type f -name "agent.startup.*" -printf "%T@ %p\n" | sort -n | tail -n 1 | cut -d ' ' -f 2-); then
         id=$((id + 1))
         name="Latest Agent Startup Script Existence Check"
         level="Critical"
@@ -34,7 +34,7 @@ if [ ${#matching_files[@]} -gt 0 ]; then
         print_full_test "$id" "$name" "FAILED" "$description" "$level" "Latest agent start up script could not be found"
     else
 
-        startup_script_content=$(sudo docker exec "$CONTAINER_NAME_CE" cat "$latest_file")
+        startup_script_content=$(docker exec "$CONTAINER_NAME_CE" cat "$latest_file")
 
         function validate_jalien_token_cert() {
             local variable="JALIEN_TOKEN_CERT"

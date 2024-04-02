@@ -12,7 +12,7 @@ description="CENTRAL container should have these packages installed: $(convert_a
 
 status="PASSED"
 for package_name in "${packages[@]}"; do
-    if ! sudo docker exec "$CONTAINER_NAME_CENTRAL" dpkg -l | grep -q "^ii.*$package_name"; then
+    if ! docker exec "$CONTAINER_NAME_CENTRAL" dpkg -l | grep -q "^ii.*$package_name"; then
         status="FAILED"
         message="$package_name is not installed."
         print_full_test "$id" "$name" $status "$description" $level "$message"
