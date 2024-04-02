@@ -26,10 +26,11 @@ The JAliEn Replica project focuses on providing a simplified environment for tes
 ## How to run the tests
 
 - Create a `.env` file using the `.env.example` file as a template.
-- Run the `sudo index.sh` file in the root directory.
+- Run the `index.sh` file in the root directory.
+- Make sure that docker is in the user group in the running environment. If not please follow this [Article](https://docs.docker.com/engine/install/linux-postinstall/) to add the user to the docker group 
 
 ### Running the test with optional command-line argumanets
-In default, running `sudo index.sh` will run all the available tests. If need to run a segment of tests can use followin arguments
+In default, running `index.sh` will run all the available tests. If need to run a segment of tests can use followin arguments
 
 - --host-only: Execute only the host specific tests
 - --container-only: Execute the host specfic tests and container specifci tests only
