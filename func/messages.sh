@@ -15,8 +15,8 @@ function print_with_fixed_width() {
 }
 
 function print_success() {
-    if [ $add_to_csv = true ]; then
-        echo "$1,$2,$3,$4,$5,$6" >>"$OUT_CSV_PATH"
+    if [ "$add_to_csv" = true ]; then
+        echo "\"$1\",\"$2\",\"$3\",\"$4\",\"$5\",\"$6\"" >>"$OUT_CSV_PATH"
     fi
     printf "| ${success_color}"
     print_with_fixed_width "$1" 3
@@ -31,8 +31,8 @@ function print_success() {
 }
 
 function print_error() {
-    if [ $add_to_csv = true ]; then
-        echo "$1,$2,$3,$4,$5,$6" >>"$OUT_CSV_PATH"
+    if [ "$add_to_csv" = true ]; then
+        echo "\"$1\",\"$2\",\"$3\",\"$4\",\"$5\",\"$6\"" >>"$OUT_CSV_PATH"
     fi
     printf "| ${error_color}"
     print_with_fixed_width "$1" 3
