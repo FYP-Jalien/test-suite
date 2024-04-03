@@ -1,8 +1,8 @@
 #!/bin/bash
 
+source .env
 source func/messages.sh
 source func/conversions.sh
-source .env
 
 args=("$@")
 
@@ -21,6 +21,11 @@ for arg in "${args[@]}"; do
         executeAdvancedLogs=false
     elif [ "$arg" = "--flow-only" ]; then
         executeAdvancedLogs=false
+    fi
+    if [ "$arg" = "--csv" ]; then
+        add_to_csv=true
+        rm -f "$OUT_CSV_PATH"
+        rm -f "$SUMMARY_CSV_PATH"
     fi
 done
 

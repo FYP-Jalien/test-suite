@@ -30,25 +30,26 @@ The JAliEn Replica project focuses on providing a simplified environment for tes
 - Make sure that docker is in the user group in the running environment. If not please follow this [Article](https://docs.docker.com/engine/install/linux-postinstall/) to add the user to the docker group 
 
 ### Running the test with optional command-line argumanets
+
 In default, running `index.sh` will run all the available tests. If need to run a segment of tests can use followin arguments
 
 - --host-only: Execute only the host specific tests
 - --container-only: Execute the host specfic tests and container specifci tests only
 - --flow-only: Execute all tests except the advanced logs tests
+- --csv: Write test log outputs and test summary to csv
 
 #### Examples
 
 ````bash
-# Run only the host specific tests
-./index.sh --host-only
+# Run only the host specific tests and also create the csv
+./index.sh --host-only --csv
 
 # Run host specific tests and container specific test only
 ./index.sh --container-only
 
-# Run all tests excepts advanced logs tests
-./index.sh --flow-only
+# Run all tests excepts advanced logs tests and also create the csv
+./index.sh --flow-only --csv
 ````
-
 
 ## Criticality Levels
 
