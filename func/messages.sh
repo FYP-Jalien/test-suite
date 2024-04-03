@@ -5,6 +5,8 @@ error_color="\e[31m"       # red
 warning_color='\033[1;33m' # yellow
 reset_color="\e[0m"        # reset
 
+add_to_csv=false
+
 # Function to print text with fixed width and multiline support
 function print_with_fixed_width() {
     text="$1"
@@ -13,6 +15,9 @@ function print_with_fixed_width() {
 }
 
 function print_success() {
+    if [ $add_to_csv = true ]; then
+        echo "$1,$2,$3,$4,$5,$6" >>"$OUT_CSV_PATH"
+    fi
     printf "| ${success_color}"
     print_with_fixed_width "$1" 3
     printf "${reset_color} | ${success_color}"
@@ -22,9 +27,13 @@ function print_success() {
     printf "${reset_color} | ${success_color}"
     print_with_fixed_width "$4" 8
     printf "${reset_color} |\n"
+
 }
 
 function print_error() {
+    if [ $add_to_csv = true ]; then
+        echo "$1,$2,$3,$4,$5,$6" >>"$OUT_CSV_PATH"
+    fi
     printf "| ${error_color}"
     print_with_fixed_width "$1" 3
     printf "${reset_color} | ${error_color}"
@@ -45,6 +54,9 @@ function print_error() {
 }
 
 function print_test_header() {
+    if [ $add_to_csv = true ]; then
+        echo "Id,Name,Status,Level,Message,Description" >>"$OUT_CSV_PATH"
+    fi
     printf "Running all tests\n"
     printf "| "
     print_with_fixed_width "Id" 3
@@ -92,8 +104,14 @@ function print_full_test() {
 
 function print_test_summary() {
     critical_success=$((critical_count - critical_fail))
-warning_success=$((warning_count - warning_fail))
-minor_success=$((minor_count - minor_fail))
+    warning_success=$((warning_count - warning_fail))
+    minor_success=$((minor_count - minor_fail))
+    if [ $add_to_csv = true ]; then
+        echo -e "Level, Count, Failed, Passed" >>"$SUMMARY_CSV_PATH"
+        echo -e "Critical,$critical_count,$critical_fail,$critical_success" >>"$SUMMARY_CSV_PATH"
+        echo -e "Warning,$warning_count,$warning_fail,$warning_success" >>"$SUMMARY_CSV_PATH"
+        echo -e "Minor,$minor_count,$minor_fail,$minor_success" >>"$SUMMARY_CSV_PATH"
+    fi
     echo -e "Test Summary:"
     echo -e "-----------------------------"
     echo -e "Critical: ${error_color}$critical_count${reset_color} (${error_color}$critical_fail Failed${reset_color}, ${success_color}$critical_success Passed${reset_color})"
