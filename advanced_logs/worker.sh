@@ -120,7 +120,7 @@ expected_lines=(
     "Started JA with:  User = \"jalien\";"
 
 )
-description="Worker should run job agent with the following lines: ${expected_lines[*]}."
+description="Worker should run job agent with the expected lines."
 check_expected_lines
 
 id=$((id + 1))
@@ -142,5 +142,5 @@ expected_lines=(
     "JobAgent finished, id:[[:alnum:]@#$ ]*"  
     "totalJobs: [0-9]\+"
     )
-description="Worker should run job wrapper with the following lines: ${expected_lines[*]}."
+description="Worker should run job wrapper with the expected lines."
 check_expected_lines
