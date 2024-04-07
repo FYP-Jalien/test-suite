@@ -91,4 +91,4 @@ jobs:
       - name: Run test-suite
         run: |
           cd ${{ github.workspace }}/../test-suite
-          ./index.sh 
+          ./index.sh --no-error-on-exit

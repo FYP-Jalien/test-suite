@@ -6,6 +6,7 @@ warning_color='\033[1;33m' # yellow
 reset_color="\e[0m"        # reset
 
 add_to_csv=false
+errorOnExit=true
 
 # Function to print text with fixed width and multiline support
 function print_with_fixed_width() {

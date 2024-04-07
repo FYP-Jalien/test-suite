@@ -10,7 +10,6 @@ executeCommon=true
 executeContainer=true
 executeJobFlow=true
 executeAdvancedLogs=true
-errorOnExit=true
 
 for arg in "${args[@]}"; do
     if [ "$arg" = "--host-only" ]; then
