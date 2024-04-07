@@ -14,14 +14,59 @@ The JAliEn Replica project focuses on providing a simplified environment for tes
 
 - **Test Suite**: A carefully crafted test suite is included to facilitate end-to-end tests. These tests are designed to verify the functionality of the replica, providing confidence in the correctness of JAliEn.
 
-## Branches
+## Prerequisites
 
-- **develop**: The develop branch contains the latest changes and updates.
-- **main**: The main branch houses stable changes that have been thoroughly tested.
+Before proceeding, ensure the following prerequisites are met:
+
+- jalien-setup: Ensure that jalien-setup is properly set up and operational. Failure to have jalien-setup running may result in tests failing and exiting with an error code of 1.
+
+- alien.py Installation:
+
+Install alien.py by following these steps:
+
+1. Setup cvmfs:
+
+```bash
+sudo wget https://ecsft.cern.ch/dist/cvmfs/cvmfs-release/cvmfs-release-latest_all.deb
+sudo dpkg -i cvmfs-release-latest_all.deb
+sudo rm -f cvmfs-release-latest_all.deb
+sudo apt-get update
+sudo apt-get install -y cvmfs
+```
+
+2. Create /etc/cvmfs/default.local:
+
+```bash
+sudo bash -c "echo '
+CVMFS_REPOSITORIES=alice.cern.ch
+CVMFS_CLIENT_PROFILE=single
+CVMFS_HTTP_PROXY=DIRECT
+' >> /etc/cvmfs/default.local"
+cat /etc/cvmfs/default.local
+sudo cvmfs_config setup
+```
+
+3. Install alien.py:
+
+```bash
+sudo apt install python3-xrootd
+pip install alienpy
+```
+
+4. Update /etc/hosts:
+
+```bash
+sudo bash -c "echo '
+127.0.0.1       JCentral-dev
+127.0.0.1       JCentral-dev-SE
+172.18.0.2      alice-jcentral.cern.ch
+' >> /etc/hosts"
+cat /etc/hosts
+```
 
 ## When Changing the test files
 
-- If you adding new files or removing a test file, please update the `run_all_test.sh` file inside the directory.
+- If you adding new files or removing a test file, please update the respective `index.sh` files inside the respective directories.
 
 ## How to run the tests
 
