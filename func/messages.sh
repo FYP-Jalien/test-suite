@@ -89,7 +89,11 @@ function print_full_test() {
             critical_fail=$((critical_fail + 1))
             print_error "$test_id" "$test_name" "$test_status" "$test_level" "$test_message" "$test_description"
             print_test_summary
-            exit 1
+            if [ $errorOnExit = true ]; then
+                exit 1
+            else
+                exit 0
+            fi
         elif [[ "$test_level" == "Warning" ]]; then
             warning_fail=$((warning_fail + 1))
             print_error "$test_id" "$test_name" "$test_status" "$test_level" "$test_message" "$test_description"

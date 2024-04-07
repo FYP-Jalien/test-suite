@@ -10,6 +10,7 @@ executeCommon=true
 executeContainer=true
 executeJobFlow=true
 executeAdvancedLogs=true
+errorOnExit=true
 
 for arg in "${args[@]}"; do
     if [ "$arg" = "--host-only" ]; then
@@ -26,6 +27,9 @@ for arg in "${args[@]}"; do
         add_to_csv=true
         rm -f "$OUT_CSV_PATH"
         rm -f "$SUMMARY_CSV_PATH"
+    fi
+    if [ "$arg" = "--no-error-on-exit" ]; then
+        errorOnExit=false
     fi
 done
 

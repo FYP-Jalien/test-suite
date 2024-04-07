@@ -82,6 +82,7 @@ In default, running `index.sh` will run all the available tests. If need to run 
 - --container-only: Execute the host specfic tests and container specifci tests only
 - --flow-only: Execute all tests except the advanced logs tests
 - --csv: Write test log outputs and test summary to csv
+- --no-error-on-exit: Exit with 0 instead of 1  when a critical test fails.
 
 #### Examples
 
