@@ -2,7 +2,7 @@ name: Run jalien-setup and test-suite
 on: 
   pull_request:
     branches:
-      - master
+      - main
 jobs:
   ci-cd-check:
     runs-on: ubuntu-latest
