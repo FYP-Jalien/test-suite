@@ -18,9 +18,11 @@ The JAliEn Replica project focuses on providing a simplified environment for tes
 
 Before proceeding, ensure the following prerequisites are met:
 
+### jalien-setup
+
 - jalien-setup: Ensure that jalien-setup is properly set up and operational. Failure to have jalien-setup running may result in tests failing and exiting with an error code of 1.
 
-- alien.py Installation:
+### alien.py Installation
 
 Install alien.py by following these steps:
 
@@ -62,6 +64,34 @@ sudo bash -c "echo '
 172.18.0.2      alice-jcentral.cern.ch
 ' >> /etc/hosts"
 cat /etc/hosts
+```
+
+### Create `docker` group
+
+- Add current user to the `docker` group if it not already done. Follow below steps accordinly.
+
+1. Create the `docker` group
+
+```bash
+sudo groupadd docker
+```
+
+2. Add the user to the `docker` group
+
+```bash
+sudo usermod -aG docker $USER
+```
+
+3. Log out and log back or use following command to activate the changes to groups:
+
+```bash
+newgrp docker
+```
+
+4. Verify that `docker` commands can be run without `sudo`
+
+```bash
+docker ps
 ```
 
 ## When Changing the test files
