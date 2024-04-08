@@ -11,22 +11,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Set up Docker
         uses: docker/setup-buildx-action@v1
-      - name: Setup cvmfs
-        run: |
-          sudo wget https://ecsft.cern.ch/dist/cvmfs/cvmfs-release/cvmfs-release-latest_all.deb
-          sudo dpkg -i cvmfs-release-latest_all.deb
-          sudo rm -f cvmfs-release-latest_all.deb
-          sudo apt-get update
-          sudo apt-get install -y cvmfs
-      - name: Create /etc/cvmfs/default.local
-        run: |
-          sudo bash -c "echo '
-          CVMFS_REPOSITORIES=alice.cern.ch
-          CVMFS_CLIENT_PROFILE=single
-          CVMFS_HTTP_PROXY=DIRECT
-          ' >> /etc/cvmfs/default.local"
-          cat /etc/cvmfs/default.local
-          sudo cvmfs_config setup
       - name: Install alien.py
         run: |
           sudo apt install python3-xrootd
