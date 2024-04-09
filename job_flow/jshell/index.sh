@@ -3,9 +3,9 @@
 shared_volume_env="$SHARED_VOLUME_PATH/env_setup.sh"
 
 id=$((id + 1))
-name="Alma-alienv xjalienfs setenv test"
+name="alienv xjalienfs setenv test"
 level="Critical"
-description="Alma-alienv xjalienfs set as env to run alien.py"
+description="alienv xjalienfs set as env to run alien.py"
 # shellcheck disable=SC1090
 if ! source "$ALIENV_PATH" setenv xjalienfs; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Could not source $ALIENV_PATH setenv xjalienfs"

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 id=$((id + 1))
-name="alma-alienv check"
+name="alienv check"
 level="Critical"
 description="$ALIENV_PATH must be present and executable to start alien.py"
 
