@@ -13,15 +13,15 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Install dependencies required for ALIENV_PATH
         run: |
-          apt update
-          apt install libx11-6 environment-modules
+          sudo apt update
+          sudo apt install libx11-6 environment-modules
       - name: Install alien.py
         run: |
-          apt install python3-xrootd
+          sudo apt install python3-xrootd
           pip install alienpy   
       - name: Update /etc/hosts
         run: |
-          bash -c "echo '
+          sudo bash -c "echo '
           127.0.0.1       JCentral-dev
           127.0.0.1       JCentral-dev-SE
           172.18.0.2      alice-jcentral.cern.ch
