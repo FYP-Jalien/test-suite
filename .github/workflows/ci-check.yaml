@@ -46,6 +46,10 @@ jobs:
           127.0.0.1       JCentral-dev-SE
           172.18.0.2      alice-jcentral.cern.ch
           ' >> /etc/hosts"
+      - name: Install dependencies required for alien.py
+        run: |
+          sudo apt update
+          sudo apt install libx11-6 environment-modules
       - name: Install alien.py
         run: |
           sudo apt install python3-xrootd
