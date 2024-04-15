@@ -10,23 +10,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Set up Docker
-        uses: docker/setup-buildx-action@v1
-      - name: Install dependencies required for ALIENV_PATH
-        run: |
-          sudo apt update
-          sudo apt install libx11-6 environment-modules
-      - name: Install alien.py
-        run: |
-          sudo apt install python3-xrootd
-          pip install alienpy   
-      - name: Update /etc/hosts
-        run: |
-          sudo bash -c "echo '
-          127.0.0.1       JCentral-dev
-          127.0.0.1       JCentral-dev-SE
-          172.18.0.2      alice-jcentral.cern.ch
-          ' >> /etc/hosts"  
-          cat /etc/hosts
+        uses: docker/setup-buildx-action@v1  
       - name: Clone jalien
         run: |
           cd ${{ github.workspace }}
@@ -58,7 +42,7 @@ jobs:
       - name: Run jalien-setup bash scripts
         run: |
           cd ${{ github.workspace }}/../jalien-setup/bash
-          ./tasks/start.sh --shared
+          ./start.sh --shared
       - name: Create .env for test-suite
         run: |
           cd ${{ github.workspace }}
@@ -66,15 +50,17 @@ jobs:
           echo "
           export SHARED_VOLUME_PATH=$(pwd)/SHARED_VOLUME
           export JALIEN_SETUP_PATH=$(pwd)/jalien-setup
+          export JALIEN_PATH=$(pwd)/jalien
           export CONTAINER_NAME_CE=shared_volume_JCentral-dev-CE_1
           export CONTAINER_NAME_CENTRAL=shared_volume_JCentral-dev_1
           export CONTAINER_NAME_SCHEDD=shared_volume_schedd_1
           export CONTAINER_NAME_SE=shared_volume_JCentral-dev-SE_1
           export CONTAINER_NAME_WORKER=shared_volume_worker1_1
           export SCRIPT_DIR=$(pwd)/test-suite
-          export ALIENV_PATH=$(pwd)/test-suite/files/alienv
           export SAMPLE_JDL_PATH=$(pwd)/test-suite/files/sample_test.jdl
           export TESTSCRIPT_PATH=$(pwd)/test-suite/files/testscript_test.sh
+          export OUT_CSV_PATH=$(pwd)/test-suite/files/out.csv
+          export SUMMARY_CSV_PATH=$(pwd)/test-suite/files/summary.csv
           " >> ${{ github.workspace }}/../test-suite/.env   
       - name: Run test-suite
         run: |
