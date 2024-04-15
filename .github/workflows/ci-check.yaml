@@ -54,6 +54,7 @@ jobs:
       - name: Install alien.py
         run: |
           sudo apt install python3-xrootd
+          pip install xrootd
           pip install alienpy
       - name: Run host specific tests
         run: |
