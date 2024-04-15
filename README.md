@@ -22,40 +22,7 @@ Before proceeding, ensure the following prerequisites are met:
 
 - jalien-setup: Ensure that jalien-setup is properly set up and operational. Failure to have jalien-setup running may result in tests failing and exiting with an error code of 1.
 
-### alien.py Installation
-
-Install alien.py by following these steps:
-
-1. Setup cvmfs:
-
-```bash
-sudo wget https://ecsft.cern.ch/dist/cvmfs/cvmfs-release/cvmfs-release-latest_all.deb
-sudo dpkg -i cvmfs-release-latest_all.deb
-sudo rm -f cvmfs-release-latest_all.deb
-sudo apt-get update
-sudo apt-get install -y cvmfs
-```
-
-2. Create /etc/cvmfs/default.local:
-
-```bash
-sudo bash -c "echo '
-CVMFS_REPOSITORIES=alice.cern.ch
-CVMFS_CLIENT_PROFILE=single
-CVMFS_HTTP_PROXY=DIRECT
-' >> /etc/cvmfs/default.local"
-cat /etc/cvmfs/default.local
-sudo cvmfs_config setup
-```
-
-3. Install alien.py:
-
-```bash
-sudo apt install python3-xrootd
-pip install alienpy
-```
-
-4. Update /etc/hosts:
+### Update /etc/hosts
 
 ```bash
 sudo bash -c "echo '

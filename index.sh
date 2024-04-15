@@ -1,8 +1,7 @@
 #!/bin/bash
 
 source .env
-source func/messages.sh
-source func/conversions.sh
+source func/index.sh
 
 args=("$@")
 
