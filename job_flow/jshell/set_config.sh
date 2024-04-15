@@ -4,6 +4,18 @@ id=$((id + 1))
 name="Check host config exists in the SHARED_COLUME"
 level="Critical"
 description="$SHARED_VOLUME_PATH/config/ComputingElement/host/ should exist"
+
+echo "This is it"
+echo "This is it"
+echo "This is it"
+echo "This is it"
+echo "This is it"
+echo "This is it"
+echo "This is it"
+echo "This is it"echo 
+echo $HOME
+
+
 # shellcheck disable=SC1090
 if ! [ -d "$SHARED_VOLUME_PATH/config/ComputingElement/host" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "$SHARED_VOLUME_PATH/config/ComputingElement/host does not exits"
@@ -19,6 +31,7 @@ else
     mkdir -p "$HOME/.alien/config"
 fi
 cp -a "$SHARED_VOLUME_PATH/config/ComputingElement/host/." "$HOME/.alien/config"
+ls "$HOME/.alien/config"
 id=$((id + 1))
 name="Check home .alien config is created"
 level="Critical"
@@ -38,6 +51,7 @@ else
     mkdir -p "$HOME/.globus"
 fi
 cp -a "$SHARED_VOLUME_PATH/globus/user/." "$HOME/.globus/"
+ls "$HOME/.globus" 
 id=$((id + 1))
 name="Check home .globus is created"
 level="Critical"
