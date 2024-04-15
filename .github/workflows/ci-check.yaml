@@ -40,6 +40,21 @@ jobs:
           export OUT_CSV_PATH=$(pwd)/test-suite/files/out.csv
           export SUMMARY_CSV_PATH=$(pwd)/test-suite/files/summary.csv
           " >> ${{ github.workspace }}/../test-suite/.env
+      - name: Update /etc/hosts
+        run: |
+          sudo bash -c "echo '
+          127.0.0.1       JCentral-dev
+          127.0.0.1       JCentral-dev-SE
+          172.18.0.2      alice-jcentral.cern.ch
+          ' >> /etc/hosts"
+      - name: Install dependencies required for alien.py
+        run: |
+          sudo apt update
+          sudo apt install libx11-6 environment-modules
+      - name: Install alien.py
+        run: |
+          sudo apt install python3-xrootd
+          pip install alienpy
       - name: Run host specific tests
         run: |
           cd ${{ github.workspace }}/../test-suite
@@ -62,21 +77,6 @@ jobs:
           export SE_NAME=shared_volume_JCentral-dev-SE_1
           export WORKER_NAME=shared_volume_worker1_1
           " >> ${{ github.workspace }}/../jalien-setup/bash/config/config.sh
-      - name: Update /etc/hosts
-        run: |
-          sudo bash -c "echo '
-          127.0.0.1       JCentral-dev
-          127.0.0.1       JCentral-dev-SE
-          172.18.0.2      alice-jcentral.cern.ch
-          ' >> /etc/hosts"
-      - name: Install dependencies required for alien.py
-        run: |
-          sudo apt update
-          sudo apt install libx11-6 environment-modules
-      - name: Install alien.py
-        run: |
-          sudo apt install python3-xrootd
-          pip install alienpy
       - name: Run jalien-setup bash scripts
         run: |
           cd ${{ github.workspace }}/../jalien-setup/bash
