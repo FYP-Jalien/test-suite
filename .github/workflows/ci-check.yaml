@@ -58,12 +58,12 @@ jobs:
           pip install alienpy
       - name: Install xrootd
         run: |
-          cd /
+          cd $HOME
           sudo apt install -y wget
           sudo wget https://xrootd.slac.stanford.edu/download/v5.6.9/xrootd-5.6.9.tar.gz
           sudo tar xvzf xrootd-5.6.9.tar.gz
-          sudo mkdir /build && cd /build
-          sudo cmake /xrootd-5.6.9 -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_PERL=FALSE
+          sudo mkdir ./build && cd ./build
+          sudo cmake ../xrootd-5.6.9 -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_PERL=FALSE
           sudo make && make install
 
       - name: Run host specific tests
