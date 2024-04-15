@@ -56,6 +56,16 @@ jobs:
           sudo apt install python3-xrootd
           pip install xrootd
           pip install alienpy
+      - name: Install xrootd
+        run: |
+          sudo apt install -y wget
+          wget https://xrootd.slac.stanford.edu/download/v4.12.1/xrootd-4.12.1.tar.gz
+          tar xvzf xrootd-4.12.1.tar.gz
+          mkdir /build && cd /build
+          cmake /xrootd-4.12.1 -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_PERL=FALSE
+          make && make install
+          cd /
+
       - name: Run host specific tests
         run: |
           cd ${{ github.workspace }}/../test-suite
