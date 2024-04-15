@@ -1,5 +1,5 @@
 name: Run jalien-setup and test-suite
-on: 
+on:
   pull_request:
     branches:
       - main
@@ -10,7 +10,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Set up Docker
-        uses: docker/setup-buildx-action@v1  
+        uses: docker/setup-buildx-action@v1
       - name: Clone jalien
         run: |
           cd ${{ github.workspace }}
@@ -21,6 +21,29 @@ jobs:
           cd ${{ github.workspace }}
           cd ..
           git clone https://github.com/FYP-Jalien/jalien-setup
+      - name: Create .env for test-suite
+        run: |
+          cd ${{ github.workspace }}
+          cd ..
+          echo "
+          export SHARED_VOLUME_PATH=$(pwd)/SHARED_VOLUME
+          export JALIEN_SETUP_PATH=$(pwd)/jalien-setup
+          export JALIEN_PATH=$(pwd)/jalien
+          export CONTAINER_NAME_CE=shared_volume_JCentral-dev-CE_1
+          export CONTAINER_NAME_CENTRAL=shared_volume_JCentral-dev_1
+          export CONTAINER_NAME_SCHEDD=shared_volume_schedd_1
+          export CONTAINER_NAME_SE=shared_volume_JCentral-dev-SE_1
+          export CONTAINER_NAME_WORKER=shared_volume_worker1_1
+          export SCRIPT_DIR=$(pwd)/test-suite
+          export SAMPLE_JDL_PATH=$(pwd)/test-suite/files/sample_test.jdl
+          export TESTSCRIPT_PATH=$(pwd)/test-suite/files/testscript_test.sh
+          export OUT_CSV_PATH=$(pwd)/test-suite/files/out.csv
+          export SUMMARY_CSV_PATH=$(pwd)/test-suite/files/summary.csv
+          " >> ${{ github.workspace }}/../test-suite/.env
+      - name: Run host specific tests
+        run: |
+          cd ${{ github.workspace }}/../test-suite
+          ./index.sh --host-only
       - name: Create config.sh for bash
         run: |
           cd ${{ github.workspace }}
@@ -58,25 +81,6 @@ jobs:
         run: |
           cd ${{ github.workspace }}/../jalien-setup/bash
           ./start.sh --shared
-      - name: Create .env for test-suite
-        run: |
-          cd ${{ github.workspace }}
-          cd ..
-          echo "
-          export SHARED_VOLUME_PATH=$(pwd)/SHARED_VOLUME
-          export JALIEN_SETUP_PATH=$(pwd)/jalien-setup
-          export JALIEN_PATH=$(pwd)/jalien
-          export CONTAINER_NAME_CE=shared_volume_JCentral-dev-CE_1
-          export CONTAINER_NAME_CENTRAL=shared_volume_JCentral-dev_1
-          export CONTAINER_NAME_SCHEDD=shared_volume_schedd_1
-          export CONTAINER_NAME_SE=shared_volume_JCentral-dev-SE_1
-          export CONTAINER_NAME_WORKER=shared_volume_worker1_1
-          export SCRIPT_DIR=$(pwd)/test-suite
-          export SAMPLE_JDL_PATH=$(pwd)/test-suite/files/sample_test.jdl
-          export TESTSCRIPT_PATH=$(pwd)/test-suite/files/testscript_test.sh
-          export OUT_CSV_PATH=$(pwd)/test-suite/files/out.csv
-          export SUMMARY_CSV_PATH=$(pwd)/test-suite/files/summary.csv
-          " >> ${{ github.workspace }}/../test-suite/.env   
       - name: Run test-suite
         run: |
           cd ${{ github.workspace }}/../test-suite
