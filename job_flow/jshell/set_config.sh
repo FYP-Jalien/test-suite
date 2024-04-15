@@ -11,7 +11,13 @@ else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "$SHARED_VOLUME_PATH/config/ComputingElement/host exits"
 fi
 
-mkdir -p "$HOME/.alien/config"
+if [ -d "$HOME/.alien/config" ]; then
+    if [ "$(ls -A "$HOME/.alien/config" | wc -l)" -gt 0 ]; then
+        rm "$HOME"/.alien/config/*
+    fi
+else
+    mkdir -p "$HOME/.alien/config"
+fi
 cp -a "$SHARED_VOLUME_PATH/config/ComputingElement/host/." "$HOME/.alien/config"
 id=$((id + 1))
 name="Check home .alien config is created"
@@ -24,7 +30,13 @@ else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "$HOME/.alien/config exits"
 fi
 
-mkdir -p "$HOME/.globus"
+if [ -d "$HOME/.globus" ]; then
+    if [ "$(ls -A "$HOME/.globus" | wc -l)" -gt 0 ]; then
+        rm "$HOME"/.globus/*
+    fi
+else
+    mkdir -p "$HOME/.globus"
+fi
 cp -a "$SHARED_VOLUME_PATH/globus/user/." "$HOME/.globus/"
 id=$((id + 1))
 name="Check home .globus is created"
@@ -36,5 +48,3 @@ if [ ! -d "$HOME/.globus" ]; then
 else
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "$HOME/.globus exits"
 fi
-
-

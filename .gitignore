@@ -4,5 +4,5 @@ central/mysql/my.cnf
 files/out.csv
 files/summary.csv
 
-*.log
+*log
 *.lck
