@@ -46,6 +46,9 @@ jobs:
           127.0.0.1       JCentral-dev-SE
           172.18.0.2      alice-jcentral.cern.ch
           ' >> /etc/hosts"
+      - name: Install xrootd
+        run: |
+          sudo apt install python3-xrootd
       - name: Run jalien-setup bash scripts
         run: |
           cd ${{ github.workspace }}/../jalien-setup/bash

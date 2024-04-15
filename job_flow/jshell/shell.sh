@@ -4,7 +4,7 @@ set -e
 
 "$JALIEN_PATH/jalien" login &
 echo "Wait 60 seconds until JBox starts"
-sleep 120
+sleep 60
 
 id=$((id + 1))
 name="Verify JShell is working"
