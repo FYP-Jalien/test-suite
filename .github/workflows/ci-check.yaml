@@ -60,11 +60,11 @@ jobs:
         run: |
           cd /
           sudo apt install -y wget
-          wget https://xrootd.slac.stanford.edu/download/v4.12.1/xrootd-4.12.1.tar.gz
-          tar xvzf xrootd-4.12.1.tar.gz
-          mkdir /build && cd /build
-          cmake /xrootd-4.12.1 -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_PERL=FALSE
-          make && make install
+          sudo wget https://xrootd.slac.stanford.edu/download/v4.12.1/xrootd-4.12.1.tar.gz
+          sudo tar xvzf xrootd-4.12.1.tar.gz
+          sudo mkdir /build && cd /build
+          sudo cmake /xrootd-4.12.1 -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_PERL=FALSE
+          sudo make && make install
 
       - name: Run host specific tests
         run: |
