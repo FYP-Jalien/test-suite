@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Remove the output directory if existing
+if "$JALIEN_PATH/jalien" -e ls | grep -q "^output_dir_new$"; then
+    "$JALIEN_PATH/jalien" -e rm -rf output_dir_new
+fi
+
 id=$((id + 1))
 name="Submit sample JDL check"
 level="Critical"

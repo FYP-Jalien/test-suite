@@ -14,3 +14,6 @@ source "$index_file_name/se_operations/index.sh"
 
 index_file_name="job_flow"
 source "$index_file_name/job_submission/index.sh"
+
+kill "$jbox_pid"
+echo "JBox stopped terminated successfully."
