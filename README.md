@@ -39,7 +39,7 @@ sudo bash -c "echo '
 cat /etc/hosts
 ```
 
-### Create `docker` group
+### Add current user to `docker` group
 
 - Add current user to the `docker` group if it not already done. Follow below steps accordinly.
 
