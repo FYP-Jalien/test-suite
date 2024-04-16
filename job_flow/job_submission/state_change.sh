@@ -44,7 +44,7 @@ if [[ $state == "I" ]]; then
             break
         fi
     done
-elif [[ $state == "W" ]] || [[ $state == "_D" ]] || [[ $state == "ASG" ]] || [[ $state == "ST" ]]; then
+elif [[ $state == "W" ]] || [[ $state == "_D" ]] || [[ $state == "ASG" ]] || [[ $state == "ST" ]] || [[ $state == "R" ]]; then
     print_full_test "$id" "$name" "PASSED" "$description" "$level" "Job $job_id is in $state State."
 fi
 
@@ -52,6 +52,7 @@ id=$((id + 1))
 name="Job state transition check: from W to _D"
 level="Critical"
 description="Job should be moved from state W to state _D"
+start_time=$SECONDS
 timeout=$((SECONDS + 300))
 while :; do
     state=$(get_job_state "$job_id")
@@ -66,7 +67,7 @@ while :; do
     elif [[ $state == "ESV" ]]; then
         print_full_test "$id" "$name" "FAILED" "$description" "Warning" "An error occurred in saving the job output. This can be due to an already existing output file/directory."
         break
-    elif [[ $state == "W" ]] || [[ $state == "ASG" ]] || [[ $state == "ST" ]]; then
+    elif [[ $state == "W" ]] || [[ $state == "ASG" ]] || [[ $state == "ST" ]] || [[ $state == "R" ]]; then
         if [[ $SECONDS -gt $timeout ]]; then
             print_full_test "$id" "$name" "FAILED" "$description" "$level" "Timeout reached. Job state did not transition to 'D' within 5 minutes."
             break
