@@ -66,7 +66,7 @@ while :; do
     elif [[ $state == "ESV" ]]; then
         print_full_test "$id" "$name" "FAILED" "$description" "Warning" "An error occurred in saving the job output. This can be due to an already existing output file/directory."
         break
-    elif [[ $state == "W" ]]; then
+    elif [[ $state == "W" ]] || [[ $state == "ASG" ]]; then
         if [[ $SECONDS -gt $timeout ]]; then
             print_full_test "$id" "$name" "FAILED" "$description" "$level" "Timeout reached. Job state did not transition to 'D' within 5 minutes."
             break
