@@ -14,7 +14,7 @@ if docker exec "$CONTAINER_NAME_CE" [ ! -d "$condor_directory" ]; then
 fi
 
 # Convert to CET time
-today=$(date -u -d "+1 hours" +"%Y-%m-%d")
+today=$(convert_to_ce_time)
 directory="$condor_directory/$today"
 
 if docker exec "$CONTAINER_NAME_CE" [ ! -d "$directory" ]; then
