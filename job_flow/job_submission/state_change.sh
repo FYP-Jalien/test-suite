@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function get_job_state() {
-    result=$(alien.py ps)
-    job_row=$(grep "jalien $1" <<<"$result")
+    result=$(remove_color "$("$JALIEN_PATH/jalien" -e ps)")
+    job_row=$(grep "jalien[[:space:]]\{1,\}$1" <<<"$result")
     if [ -n "$job_row" ]; then
         echo "$job_row" | awk '{split($0, a); print a[NF-1]}'
     fi
