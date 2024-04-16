@@ -13,7 +13,7 @@ if docker exec "$CONTAINER_NAME_CE" [ ! -d "$condor_directory" ]; then
     print_full_test "$id" "$name" "FAILED" "$description" "$level" "Directory $directory does not exist."
 fi
 
-today=$(date -u -d "+1 hours" +"%Y-%m-%d")
+today=$(convert_to_ce_time)
 directory="$condor_directory/$today"
 
 if docker exec "$CONTAINER_NAME_CE" [ ! -d "$directory" ]; then
