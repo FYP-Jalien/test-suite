@@ -22,6 +22,12 @@ Before proceeding, ensure the following prerequisites are met:
 
 - jalien-setup: Ensure that jalien-setup is properly set up and operational. Failure to have jalien-setup running may result in tests failing and exiting with an error code of 1.
 
+### Install xrootd
+
+```bash
+sudo apt install xrootd-client xrootd-server python3-xrootd
+```
+
 ### Update /etc/hosts
 
 ```bash
