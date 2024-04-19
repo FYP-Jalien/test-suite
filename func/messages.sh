@@ -32,24 +32,32 @@ function print_success() {
 }
 
 function print_error() {
+    level=$4
     if [ "$add_to_csv" = true ]; then
         echo "\"$1\",\"$2\",\"$3\",\"$4\",\"$5\",\"$6\"" >>"$OUT_CSV_PATH"
     fi
-    printf "| ${error_color}"
+    if [[ "$level" == "Critical" ]]; then
+        color=$error_color
+    elif [[ "$level" == "Warning" ]]; then
+        color=$warning_color
+    elif [[ "$level" == "Minor" ]]; then
+        color=$reset_color
+    fi
+    printf "| ${color}"
     print_with_fixed_width "$1" 3
-    printf "${reset_color} | ${error_color}"
+    printf "${reset_color} | ${color}"
     print_with_fixed_width "$2" 70
-    printf "${reset_color} | ${error_color}"
+    printf "${reset_color} | ${color}"
     print_with_fixed_width "$3" 6
-    printf "${reset_color} | ${error_color}"
+    printf "${reset_color} | ${color}"
     print_with_fixed_width "$4" 8
-    printf "${reset_color} | ${error_color}"
+    printf "${reset_color} | ${color}"
     content_width=$(($(printf "%s" "$5" | wc -c) + 1))
     min_width=100
     if [[ $content_width -lt $min_width ]]; then
         content_width=$min_width
     fi
-    printf "${error_color}"
+    printf "${color}"
     print_with_fixed_width "$5" $content_width
     printf "${reset_color} |\n"
 }
@@ -117,10 +125,18 @@ function print_test_summary() {
         echo -e "Warning,$warning_count,$warning_fail,$warning_success" >>"$SUMMARY_CSV_PATH"
         echo -e "Minor,$minor_count,$minor_fail,$minor_success" >>"$SUMMARY_CSV_PATH"
     fi
+    summary_error_color=$error_color
+    summary_warning_color=$warning_color
+    if [[ $critical_fail -eq 0 ]]; then
+        summary_error_color=$success_color
+    fi
+    if [[ $warning_fail -eq 0 ]]; then
+        summary_warning_color=$success_color
+    fi
     echo -e "Test Summary:"
     echo -e "-----------------------------"
-    echo -e "Critical: ${error_color}$critical_count${reset_color} (${error_color}$critical_fail Failed${reset_color}, ${success_color}$critical_success Passed${reset_color})"
-    echo -e "Warning: ${warning_color}$warning_count${reset_color} (${warning_color}$warning_fail Failed${reset_color}, ${success_color}$warning_success Passed${reset_color})"
+    echo -e "Critical: $critical_count (${summary_error_color}$critical_fail Failed${reset_color}, ${success_color}$critical_success Passed${reset_color})"
+    echo -e "Warning: $warning_count (${summary_warning_color}$warning_fail Failed${reset_color}, ${success_color}$warning_success Passed${reset_color})"
     echo -e "Minor: ${reset_color}$minor_count${reset_color} (${reset_color}$minor_fail Failed${reset_color}, ${success_color}$minor_success Passed${reset_color})"
     echo -e "-----------------------------"
 }
